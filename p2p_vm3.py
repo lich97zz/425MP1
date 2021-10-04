@@ -40,7 +40,7 @@ def server_func():
     port = 1234        # Port to listen on (non-privileged ports are > 1023)
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(("", port))
+    s.bind(('', port))
     s.listen()
     conn, addr = s.accept()
     with conn:
