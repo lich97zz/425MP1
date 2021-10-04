@@ -16,9 +16,10 @@ def client_func():
     host_ip = "172.22.158.167"
     port = 1235
     port = int(port)
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
     while True:
         try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((host_ip, port))
             break
         except:
@@ -30,7 +31,8 @@ def client_func():
     while True:
         send_msg('<VM1>:sending message with index:'+str(msg_index)+' \n')
         time.sleep(2)
-
+        msg_index++
+        
     s.close()
 
 def client_func1():
@@ -46,9 +48,10 @@ def client_func1():
     host_ip = "172.22.94.167"
     port = 1236
     port = int(port)
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
     while True:
         try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((host_ip, port))
             break
         except:
@@ -60,6 +63,7 @@ def client_func1():
     while True:
         send_msg('<VM1>:sending message with index:'+str(msg_index)+' \n')
         time.sleep(2)
+        msg_index++
 
     s.close()
 
