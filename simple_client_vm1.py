@@ -66,18 +66,18 @@ def client_func1():
 def server_func():
     #receive
 ##    host_ip = '172.22.156.167'  # Standard loopback interface address (localhost)
-    port = 1235        # Port to listen on (non-privileged ports are > 1023)
+    port = 1234        # Port to listen on (non-privileged ports are > 1023)
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(("", port))
     s.listen()
     conn, addr = s.accept()
     with conn:
-        print('Connected by node 2 '+addr+"\n")
+        print('Connected by node 2 '+str(addr)+"\n")
         while True:
             data = conn.recv(1024)
             data_content = data.decode('utf-8')
-            print("received from node 2:"+data_content+"\n")
+            print("received:"+str(data_content)+"\n")
             if not data:
                 break
 
@@ -109,5 +109,5 @@ receive_t1.start()
 send_t = threading.Thread(target=client_func, args=())
 send_t.start()
 
-send_t1 = threading.Thread(target=client_func1, args=())
-send_t1.start()
+##send_t1 = threading.Thread(target=client_func1, args=())
+##send_t1.start()
