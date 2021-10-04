@@ -17,14 +17,15 @@ def client_func():
     port = 1234
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    while True:
-        try:
-            s.connect((host_ip, port))
-            break
-        except:
-            print("Can't connect to node 1, reconnect in 1 second...\n")
-            time.sleep(1)
-            continue
+    s.connect((host_ip, port))
+##    while True:
+##        try:
+##            s.connect((host_ip, port))
+##            break
+##        except:
+##            print("Can't connect to node 1, reconnect in 1 second...\n")
+##            time.sleep(1)
+##            continue
 
     msg_index = 0
     while True:
@@ -40,7 +41,7 @@ def server_func():
     port = 1234        # Port to listen on (non-privileged ports are > 1023)
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(('127.0.0.1', port))
+    s.bind(('', port))
     s.listen()
     conn, addr = s.accept()
     with conn:
