@@ -31,7 +31,7 @@ def client_func():
     while True:
         send_msg('<VM1>:sending message with index:'+str(msg_index)+' \n')
         time.sleep(2)
-        msg_index++
+        msg_index+=1
         
     s.close()
 
@@ -63,7 +63,7 @@ def client_func1():
     while True:
         send_msg('<VM1>:sending message with index:'+str(msg_index)+' \n')
         time.sleep(2)
-        msg_index++
+        msg_index+=1
 
     s.close()
 
