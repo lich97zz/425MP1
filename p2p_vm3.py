@@ -38,7 +38,7 @@ def client_func():
 def server_func():
     #receive
 ##    host_ip = '172.22.156.167'  # Standard loopback interface address (localhost)
-    port = 1234        # Port to listen on (non-privileged ports are > 1023)
+    port = 1236        # Port to listen on (non-privileged ports are > 1023)
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('', port))
