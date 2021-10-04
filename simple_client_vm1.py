@@ -88,6 +88,8 @@ def init(file_name):
     with open(file_name, 'r') as f:
         connect_num = int(f.readline().split('\n')[0])
         for elm in f.readlines():
+            if len(elm) <= 2:
+                continue
             node_name, node_ip, node_port = elm.split(' ')
             name_list.append(str(node_name))
             ip_list.append(str(node_ip))
