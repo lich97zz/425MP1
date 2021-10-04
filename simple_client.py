@@ -10,7 +10,7 @@ import types
 def client_func():
     #one to many send
     def multicast(msg):
-        print("init a multicast\n")
+##        print("init a multicast\n")
         for node_id in range(connect_num):
             if not connected[node_id]:
                 continue
@@ -39,23 +39,22 @@ def client_func():
 def establish_connection(node_id):
     if(connected[node_id]):
         return
-    
-    while True:
-        time_start = time.time()
-        host_ip = ip_list[node_id]
-        port = port_list[node_id]
-        port = int(port)
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(2)
-        socket_list[node_id] = s
 
+    host_ip = ip_list[node_id]
+    port = port_list[node_id]
+    port = int(port)
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(3)
+    socket_list[node_id] = s
+    while True:
         try:
+            print("Sending connection req to:"+host_ip+" "+str(port)+'\n')
             s.connect((host_ip, port))
             print("***Connected to "+name_list[node_id])
             connected[node_id] = True
             break
         except:
-            print("...Can't connect to"+name_list[node_id]+", reconnect soon...\n")
+            print("...Can't connect to "+name_list[node_id]+", reconnect soon...\n")
             time.sleep(2)
             continue
     return
@@ -69,6 +68,7 @@ def server_func():
 def server_func_single(node_id):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('',port_list[node_id]))
+    print("trying to bind:"+str(port_list[node_id])+"\n")
     s.listen()
     conn, addr = s.accept()
     rec_socket_list[node_id] = s
@@ -100,8 +100,8 @@ def init(file_name):
             rec_socket_list.append("")
 
 
-file_name = str(os.sys.argv[1])
-
+##file_name = str(os.sys.argv[1])
+file_name = "config_vm1"
 connect_num = 0
 name_list = []
 ip_list = []
