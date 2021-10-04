@@ -2,7 +2,7 @@ import socket
 import os
 
 HOST,PORT = tuple(os.sys.argv[1:3])
-
+PORT = int(PORT)
 ##HOST = '172.22.158.167'  # The server's hostname or IP address
 ##PORT = 1234  # The port used by the server
 
