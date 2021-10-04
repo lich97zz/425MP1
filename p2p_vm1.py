@@ -18,14 +18,15 @@ def client_func1():
     port = 1236
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    while True:
-        try:
-            s.connect((host_ip, port))
-            break
-        except:
-            print("Can't connect to node 3, reconnect in 1 second...\n")
-            time.sleep(1)
-            continue
+    s.connect((host_ip, port))
+##    while True:
+##        try:
+##            s.connect((host_ip, port))
+##            break
+##        except:
+##            print("Can't connect to node 3, reconnect in 1 second...\n")
+##            time.sleep(1)
+##            continue
 
     msg_index = 0
     while True:
