@@ -23,6 +23,6 @@ def send_msg(msg):
 while True:
     send_msg("send a msg")
     data = s.recv(1024)
-    print('Received', repr(data))
+    print('Received'+repr(data).decode('utf-8'))
     time.sleep(1)
     
