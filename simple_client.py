@@ -100,7 +100,10 @@ def init(file_name):
             rec_socket_list.append("")
 
 
+
+
 file_name = str(os.sys.argv[1])
+##file_name = "config_vm1"
 connect_num = 0
 name_list = []
 ip_list = []
@@ -111,6 +114,7 @@ socket_list = []
 rec_socket_list = []
 
 init("./"+file_name)
+
 tmp_list = []
 for i in range(connect_num+1):
     n_name = "node"+str(i+1)
@@ -119,6 +123,17 @@ for i in range(connect_num+1):
 self_node_name = str(tmp_list[0])
 
 
+print("---------displaying initial setting\n")
+print("self_node_name:",self_node_name)
+print("name_list:",name_list)
+print("ip_list:",ip_list)
+print("port_list:",port_list)
+print("connect_num:",connect_num)
+
+
+receive_t = threading.Thread(target=server_func, args=())
+receive_t.start()
+
 for i in range(connect_num):
     connect_t = threading.Thread(target=establish_connection, args=(i,))
     connect_t.start()
@@ -126,6 +141,5 @@ for i in range(connect_num):
 send_t = threading.Thread(target=client_func, args=())
 send_t.start()
 
-receive_t = threading.Thread(target=server_func, args=())
-receive_t.start()
+
 
