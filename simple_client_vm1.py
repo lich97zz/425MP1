@@ -103,11 +103,11 @@ def server_func1():
 receive_t = threading.Thread(target=server_func, args=())
 receive_t.start()
 
-receive_t1 = threading.Thread(target=server_func1, args=())
-receive_t1.start()
+##receive_t1 = threading.Thread(target=server_func1, args=())
+##receive_t1.start()
 
 send_t = threading.Thread(target=client_func, args=())
 send_t.start()
 
-##send_t1 = threading.Thread(target=client_func1, args=())
-##send_t1.start()
+send_t1 = threading.Thread(target=client_func1, args=())
+send_t1.start()
