@@ -18,7 +18,7 @@ def client_func():
         return
     
     def send_msg(msg,node_id):
-        print("To:"+str(node_id)+msg)
+        print("Send to <node"+str(node_id)+">:"+msg)
         msg=msg.encode('utf-8')
         totalsent = 0
         while totalsent < len(msg):
@@ -100,8 +100,7 @@ def init(file_name):
             rec_socket_list.append("")
 
 
-##file_name = str(os.sys.argv[1])
-file_name = "config_vm1"
+file_name = str(os.sys.argv[1])
 connect_num = 0
 name_list = []
 ip_list = []
