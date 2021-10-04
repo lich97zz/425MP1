@@ -28,7 +28,7 @@ def client_func():
 
     msg_index = 0
     while True:
-        send_msg('<VM1>:sending message with index:'+str(msg_index)+' \n')
+        send_msg('<VM3>:sending message with index:'+str(msg_index)+' \n')
         time.sleep(2)
 
     s.close()
@@ -58,7 +58,7 @@ def client_func1():
 
     msg_index = 0
     while True:
-        send_msg('<VM1>:sending message with index:'+str(msg_index)+' \n')
+        send_msg('<VM3>:sending message with index:'+str(msg_index)+' \n')
         time.sleep(2)
 
     s.close()
