@@ -14,6 +14,9 @@ while True:
         print('Connected by', addr)
         while True:
             data = conn.recv(1024)
+            stringdata = data.decode('utf-8')
+            print("Received:",stringdata)
             if not data:
                 break
+            data = stringdata.encode('utf-8')
             conn.sendall(data)
