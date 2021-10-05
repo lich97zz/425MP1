@@ -44,7 +44,7 @@ def client_func():
         return
     
     def unicast(msg,node_id):
-        print("Send to <node"+str(node_id+1)+">:"+msg)
+##        print("Send to <node"+str(node_id+1)+">:"+msg)
         msg=msg.encode('utf-8')
         totalsent = 0
         while totalsent < len(msg):
@@ -112,8 +112,8 @@ def server_func():
             info = recv_data.decode('utf-8')
 ##            Notice
             on_receiving(info)
-            print("Received:"+str(info))
-            print_info()
+##            print("Received:"+str(info))
+##            print_info()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('', self_port))
@@ -277,11 +277,13 @@ def organize_pending():
             return
         if pending_msg[i][1]=="delivered":
             parse_str = parse_msg(pending_msg[i][2])
+            delivered_priority = pending_msg[i][0]
             dict_key = remove_sender(parse_str)
             parse_str_map.pop(dict_key)
             if dict_key in msg_replied:
                 msg_replied.pop(dict_key)
             delivered_msg.append(pending_msg[i][2].split('|')[-1])
+            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
             del pending_msg[i]
             i-=1
             
