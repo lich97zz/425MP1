@@ -15,7 +15,8 @@ def client_func():
         tmp_send_list = to_send_msg[:send_msg_len]
         for i in range(send_msg_len):
             del to_send_msg[0]
-        print("info:",len(to_send_msg))
+        print("info:",len(tmp_send_list))
+        print(tmp_send_list)
         for elm in tmp_send_list:
             if elm[0] == "Multicast":
                 multicast(elm[1])
@@ -372,20 +373,22 @@ for i in range(connect_num+1):
         self_node_name = n_name
 
 try:
-    receive_t = threading.Thread(target=server_func, args=(), daemon=True)
+    receive_t = threading.Thread(target=server_func, args=())
     receive_t.start()
 
     for i in range(connect_num):
-        connect_t = threading.Thread(target=establish_connection, args=(i,), daemon=True)
+        connect_t = threading.Thread(target=establish_connection, args=(i,))
         connect_t.start()
 
-    send_t = threading.Thread(target=client_func, args=(),daemon=True)
+    send_t = threading.Thread(target=client_func, args=())
     send_t.start()
 
     msg_index = 1
-    for i in range(10):
+    for i in range(5):
         process_to_send("msg:"+str(msg_index))
-        time.sleep(3)
+        print("print_info:\n")
+        print_info()
+        time.sleep(4)
 except KeyboardInterrupt:
     print("endl:\n")
     print(delivered_msg)
