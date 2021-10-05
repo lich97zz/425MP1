@@ -8,7 +8,13 @@ import hashlib
 #Notice
 ##import ISIS
 
-
+def print_info():
+    print("parse_str_map:",parse_str_map,'\n')
+    print("msg_replied:",msg_replied,'\n')
+    print("pending_msg:",pending_msg,'\n')
+    print("to_send_msg:",to_send_msg,'\n')
+    print("delivered_msg:",delivered_msg,'\n')
+    
 def client_func():
     def send_msg():
         if len(to_send_msg) == 0:
@@ -107,6 +113,7 @@ def server_func():
 ##            Notice
             on_receiving(info)
             print("Received:"+str(info))
+            print_info()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('', self_port))
@@ -336,12 +343,7 @@ def init(file_name):
 
             socket_list.append("")
 
-def print_info():
-    print("parse_str_map:",parse_str_map,'\n')
-    print("msg_replied:",msg_replied,'\n')
-    print("pending_msg:",pending_msg,'\n')
-    print("to_send_msg:",to_send_msg,'\n')
-    print("delivered_msg:",delivered_msg,'\n')
+
 
 
 
@@ -399,7 +401,7 @@ try:
 
         msg_index = 1
 
-        for i in range(5):
+        for i in range(1):
             process_to_send("msg:"+self_node_name+str(msg_index))
             msg_index+=1
             time.sleep(4)
