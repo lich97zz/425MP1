@@ -401,7 +401,7 @@ try:
 
         msg_index = 1
 
-        for i in range(1):
+        for i in range(2):
             process_to_send("msg:"+self_node_name+str(msg_index))
             msg_index+=1
             time.sleep(4)
@@ -409,3 +409,6 @@ try:
 except KeyboardInterrupt:
     print("endl:\n")
     print(delivered_msg)
+finally:
+    for s in socket_list:
+        s.close()
