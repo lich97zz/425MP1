@@ -381,26 +381,26 @@ try:
     
     receive_t = threading.Thread(target=server_func, args=())
     receive_t.start()
-    print("--------receive_thread ok")
+
     for i in range(connect_num):
         connect_t = threading.Thread(target=establish_connection, args=(i,))
         connect_t.start()
-    print("--------connect_thread ok")
+
     send_t = threading.Thread(target=client_func, args=())
     send_t.start()
-    print("--------send_thread ok")
+
     #modify here
     while True:
-        if True in connected:
+        if False not in connected:
             break
-        
-    time.sleep(2)
-    if True in connected:
+    print("Connection OK")
+    time.sleep(5)
+    if False not in connected:
 
         msg_index = 1
 
         for i in range(5):
-            process_to_send("msg:"+str(msg_index))
+            process_to_send("msg:"+self_node_name+str(msg_index))
             msg_index+=1
             time.sleep(4)
     time.sleep(500)
