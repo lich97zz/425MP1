@@ -60,21 +60,27 @@ def establish_connection(node_id):
     return
     
 def server_func():
-    global self_port
-    self_port = int(self_port)
+    global connect_num
+    for i in range(connect_num):
+        server_single_t = threading.Thread(target=server_func_single, args=(i,))
+        server_single_t.start()
+        
+def server_func_single(node_id):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(('',self_port))
+    s.bind(('',port_list[node_id]))
+    print("trying to bind:"+str(port_list[node_id])+"\n")
     s.listen()
     conn, addr = s.accept()
+    rec_socket_list[node_id] = s
     with conn:
+        rec_connected[node_id] = True
         print("Connected by", addr)
         while True:
             data = conn.recv(1024)
             print("Received from "+str(addr)+":"+data.decode("utf-8"))
             if not data:
                 break
-        
-
+            
         
     
 def init(file_name):
@@ -89,24 +95,23 @@ def init(file_name):
             ip_list.append(str(node_ip))
             port_list.append(int(node_port))
             connected.append(False)
-
+            rec_connected.append(False)
             socket_list.append("")
-    
+            rec_socket_list.append("")
 
 
 
 
-file_name, self_port = str(os.sys.argv[1:3])
+file_name = str(os.sys.argv[1])
 ##file_name = "config_vm1"
-##self_port = 1234
 connect_num = 0
 name_list = []
 ip_list = []
 port_list = []
 connected = []
-
+rec_connected = []
 socket_list = []
-
+rec_socket_list = []
 
 init("./"+file_name)
 
