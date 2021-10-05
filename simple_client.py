@@ -390,7 +390,7 @@ try:
     send_t.start()
     print("--------send_thread ok")
     #modify here
-    sleep(2)
+    time.sleep(2)
     if True in connected:
         print("--------entering....")
         time.sleep(2)
