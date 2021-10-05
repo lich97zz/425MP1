@@ -15,6 +15,7 @@ def client_func():
         tmp_send_list = to_send_msg[:send_msg_len]
         for i in range(send_msg_len):
             del to_send_msg[0]
+        print("info:",len(to_send_msg))
         for elm in tmp_send_list:
             if elm[0] == "Multicast":
                 multicast(elm[1])
@@ -47,7 +48,7 @@ def client_func():
 
     while True:
         send_msg()
-        time.sleep(0.05)
+        time.sleep(0.55)
 
     return
     
