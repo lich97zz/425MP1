@@ -11,6 +11,9 @@ import hashlib
 
 def client_func():
     def send_msg():
+        if len(to_send_msg) == 0:
+            return
+        print("want to send:",to_send_msg)
         send_msg_len = len(to_send_msg)
         tmp_send_list = to_send_msg[:send_msg_len]
         for i in range(send_msg_len):
@@ -386,12 +389,14 @@ try:
     #modify here
     if True in connected:
         time.sleep(2)
+
         msg_index = 1
-        for i in range(5):
-            process_to_send("msg:"+str(msg_index))
-            print("print_info:\n")
-            print_info()
-            time.sleep(4)
+        process_to_send("msg:"+str(msg_index))
+##        for i in range(5):
+##            process_to_send("msg:"+str(msg_index))
+##            print("print_info:\n")
+##            print_info()
+##            time.sleep(4)
 except KeyboardInterrupt:
     print("endl:\n")
     print(delivered_msg)
