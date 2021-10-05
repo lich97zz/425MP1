@@ -70,7 +70,7 @@ def establish_connection(node_id):
     port = port_list[node_id]
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(3)
+    s.settimeout(1)
     socket_list[node_id] = s
     while True:
         try:
@@ -81,7 +81,7 @@ def establish_connection(node_id):
             break
         except:
             print("...Can't connect to "+name_list[node_id]+", reconnect soon...\n")
-            time.sleep(2)
+            time.sleep(1.5)
             continue
     return
     
@@ -401,10 +401,10 @@ try:
 
         msg_index = 1
 
-        for i in range(2):
+        for i in range(3):
             process_to_send("msg:"+self_node_name+str(msg_index))
             msg_index+=1
-            time.sleep(4)
+            time.sleep(1)
     time.sleep(500)
 except KeyboardInterrupt:
     print("endl:\n")
