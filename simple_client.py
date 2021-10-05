@@ -105,7 +105,7 @@ def server_func():
                 s.close()
             info = recv_data.decode('utf-8')
 ##            Notice
-            process_to_send(info)
+            on_receiving(info)
             print("Received:"+str(info))
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -389,9 +389,11 @@ try:
     #modify here
     if True in connected:
         time.sleep(2)
-
+        print("----------start_sending...")
         msg_index = 1
         process_to_send("msg:"+str(msg_index))
+        time.sleep(2)
+        process_to_send("msg:"+str(msg_index+1))
 ##        for i in range(5):
 ##            process_to_send("msg:"+str(msg_index))
 ##            print("print_info:\n")
