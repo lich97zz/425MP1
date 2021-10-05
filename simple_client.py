@@ -8,9 +8,7 @@ import types
 #run on vm1 172.22.156.167 port=1234, send to vm2 172.22.158.167 port=1235
 
 def client_func():
-    #one to many send
     def multicast(msg):
-##        print("init a multicast\n")
         for node_id in range(connect_num):
             if not connected[node_id]:
                 continue
@@ -18,7 +16,7 @@ def client_func():
         return
     
     def send_msg(msg,node_id):
-        print("Send to <node"+str(node_id)+">:"+msg)
+        print("Send to <node"+str(node_id+1)+">:"+msg)
         msg=msg.encode('utf-8')
         totalsent = 0
         while totalsent < len(msg):
@@ -64,15 +62,18 @@ def server_func():
     self_port = int(self_port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('',self_port))
-    s.listen()
-    conn, addr = s.accept()
-    with conn:
-        print("Connected by", addr)
+    s.listen(128)
+    while True:
+        conn, addr = s.accept()
+
+        print("Connected by"+str(addr))
         while True:
             data = conn.recv(1024)
             print("Received from "+str(addr)+":"+data.decode("utf-8"))
             if not data:
                 break
+        conn.close()
+    s.close()
         
 
         
