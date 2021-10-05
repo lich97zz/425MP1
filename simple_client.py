@@ -77,9 +77,8 @@ def server_func1():
         
 def server_func():
     global self_port
-    host = ''
+    
     sel = selectors.DefaultSelector()
-
     def accept_func(sock):
         conn, addr = sock.accept() 
         conn.setblocking(False)
@@ -94,6 +93,7 @@ def server_func():
         if mask & selectors.EVENT_READ:
             recv_data = s.recv(1024)
             info = recv_data.decode('utf-8')
+            print("Received:"+str(info))
             if not recv_data:
                 sel.unregister(s)
                 s.close()
