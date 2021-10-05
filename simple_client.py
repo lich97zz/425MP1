@@ -150,10 +150,10 @@ def init(file_name):
 
 
 
-##file_name = str(os.sys.argv[1])
-##self_port = int(os.sys.argv[2])
-file_name = "config_vm1"
-self_port = 1234
+file_name = str(os.sys.argv[1])
+self_port = int(os.sys.argv[2])
+##file_name = "config_vm1"
+##self_port = 1234
 connect_num = 0
 name_list = []
 ip_list = []
