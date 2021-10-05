@@ -269,6 +269,7 @@ def msg_set_sender(msg, sender):
 
     
 def organize_pending():
+    
     #sort pending_msg, and pop out leading delivered msg to delivered_msg
     global pending_msg,delivered_seq_num
     pending_msg.sort()
@@ -277,12 +278,13 @@ def organize_pending():
             return
         if pending_msg[i][1]=="delivered":
             cur_priority = int(pending_msg[i][0])
-            if cur_priority > delivered_seq_num:
-                break
+            
             delivered_seq_num += 1
             parse_str = parse_msg(pending_msg[i][2])
             delivered_priority = pending_msg[i][0]
             dict_key = remove_sender(parse_str)
+            if cur_priority > delivered_seq_num:
+                continue
             parse_str_map.pop(dict_key)
             if dict_key in msg_replied:
                 msg_replied.pop(dict_key)
