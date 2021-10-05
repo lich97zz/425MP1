@@ -135,51 +135,7 @@ def init(file_name):
             socket_list.append("")
     
 
-parse_str_map = dict()
-msg_replied = dict()
-pending_msg = []
-sequence_num = 0
-to_send_msg = []
-delivered_msg = []
 
-file_name = str(os.sys.argv[1])
-self_port = int(os.sys.argv[2])
-##file_name = "config_vm1"
-##self_port = 1234
-connect_num = 0
-name_list = []
-ip_list = []
-port_list = []
-connected = []
-socket_list = []
-
-
-init("./"+file_name)
-
-self_node_name = ""
-for i in range(connect_num+1):
-    n_name = "node"+str(i+1)
-    if n_name not in name_list:
-        self_node_name = n_name
-
-try:
-    receive_t = threading.Thread(target=server_func, args=(), daemon=True)
-    receive_t.start()
-
-    for i in range(connect_num):
-        connect_t = threading.Thread(target=establish_connection, args=(i,), daemon=True)
-        connect_t.start()
-
-    send_t = threading.Thread(target=client_func, args=(),daemon=True)
-    send_t.start()
-
-    msg_index = 1
-    for i in range(10):
-        process_to_send("msg:"+str(msg_index))
-        time.sleep(3)
-except KeyboardInterrupt:
-    print("endl:\n")
-    print(delivered_msg)
 
 
 
@@ -379,3 +335,56 @@ def print_info():
     print("pending_msg:",pending_msg,'\n')
     print("to_send_msg:",to_send_msg,'\n')
     print("delivered_msg:",delivered_msg,'\n')
+
+
+
+
+
+
+
+
+parse_str_map = dict()
+msg_replied = dict()
+pending_msg = []
+sequence_num = 0
+to_send_msg = []
+delivered_msg = []
+
+##file_name = str(os.sys.argv[1])
+##self_port = int(os.sys.argv[2])
+file_name = "config_vm1"
+self_port = 1234
+connect_num = 0
+name_list = []
+ip_list = []
+port_list = []
+connected = []
+socket_list = []
+
+
+init("./"+file_name)
+
+self_node_name = ""
+for i in range(connect_num+1):
+    n_name = "node"+str(i+1)
+    if n_name not in name_list:
+        self_node_name = n_name
+
+try:
+    receive_t = threading.Thread(target=server_func, args=(), daemon=True)
+    receive_t.start()
+
+    for i in range(connect_num):
+        connect_t = threading.Thread(target=establish_connection, args=(i,), daemon=True)
+        connect_t.start()
+
+    send_t = threading.Thread(target=client_func, args=(),daemon=True)
+    send_t.start()
+
+    msg_index = 1
+    for i in range(10):
+        process_to_send("msg:"+str(msg_index))
+        time.sleep(3)
+except KeyboardInterrupt:
+    print("endl:\n")
+    print(delivered_msg)
