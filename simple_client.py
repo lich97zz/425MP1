@@ -100,7 +100,7 @@ def server_func():
                 s.close()
             info = recv_data.decode('utf-8')
 ##            Notice
-            process_to_send(msg)
+            process_to_send(info)
             print("Received:"+str(info))
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
