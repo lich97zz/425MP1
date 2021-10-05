@@ -1,202 +1,4 @@
-import os, socket
 import time
-import threading
-import sys
-import selectors
-import types
-import hashlib
-#Notice
-##import ISIS
-
-
-def client_func():
-    def send_msg():
-        send_msg_len = len(to_send_msg)
-        tmp_send_list = to_send_msg[:send_msg_len]
-        for i in range(send_msg_len):
-            del to_send_msg[0]
-        for elm in tmp_send_list:
-            if elm[0] == "Multicast":
-                multicast(elm[1])
-            else:
-                unicast(elm[1], elm[0])
-                
-    def multicast(msg):
-        for node_id in range(connect_num):
-            if not connected[node_id]:
-                continue
-            try:
-                unicast(msg, node_id)
-            except BrokenPipeError:
-                connected[node_id] = False
-                continue
-        return
-    
-    def unicast(msg,node_id):
-        print("Send to <node"+str(node_id+1)+">:"+msg)
-        msg=msg.encode('utf-8')
-        totalsent = 0
-        while totalsent < len(msg):
-            s = socket_list[node_id]
-            sent = s.send(msg[totalsent:])
-            if sent == 0:
-                raise RuntimeError("socket connection broken")
-            totalsent = totalsent + sent
-            
-    global self_node_name   
-
-    while True:
-        send_msg()
-        time.sleep(0.05)
-
-    return
-    
-def establish_connection(node_id):
-    if(connected[node_id]):
-        return
-
-    host_ip = ip_list[node_id]
-    port = port_list[node_id]
-    port = int(port)
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(3)
-    socket_list[node_id] = s
-    while True:
-        try:
-            print("Sending connection req to:"+host_ip+" "+str(port)+'\n')
-            s.connect((host_ip, port))
-            print("***Connected to "+name_list[node_id])
-            connected[node_id] = True
-            break
-        except:
-            print("...Can't connect to "+name_list[node_id]+", reconnect soon...\n")
-            time.sleep(2)
-            continue
-    return
-    
-def server_func():
-    #a many to one receive function
-    #refer to python socket tutorial:
-    #https://realpython.com/python-sockets/#multi-connection-client-and-server
-    #https://github.com/realpython/materials/blob/master/python-sockets-tutorial/multiconn-server.py
-    global self_port
-    
-    sel = selectors.DefaultSelector()
-    def accept_func(sock):
-        conn, addr = sock.accept() 
-        conn.setblocking(False)
-        data = types.SimpleNamespace(addr=addr, inb=b"")
-        events = selectors.EVENT_READ | selectors.EVENT_WRITE
-        sel.register(conn, events, data=data)
-
-
-    def process_connection(key, mask):
-        data = key.data
-        s = key.fileobj
-        if mask & selectors.EVENT_READ:
-            recv_data = s.recv(1024)
-            if not recv_data:
-                sel.unregister(s)
-                s.close()
-            info = recv_data.decode('utf-8')
-##            Notice
-            process_to_send(msg)
-            print("Received:"+str(info))
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(('', self_port))
-    sock.listen()
-    sock.setblocking(False)
-    sel.register(sock, selectors.EVENT_READ, data=None)
-
-    while True:
-        elm = sel.select(timeout=None)
-        for key, mask in elm:
-            if key.data:
-                process_connection(key, mask)
-            else:
-                accept_func(key.fileobj)
-    sel.close()
-
-
-def init(file_name):
-    global connect_num
-    with open(file_name, 'r') as f:
-        connect_num = int(f.readline().split('\n')[0])
-        for elm in f.readlines():
-            if len(elm) <= 2:
-                continue
-            node_name, node_ip, node_port = elm.split(' ')
-            name_list.append(str(node_name))
-            ip_list.append(str(node_ip))
-            port_list.append(int(node_port))
-            connected.append(False)
-
-            socket_list.append("")
-    
-
-parse_str_map = dict()
-msg_replied = dict()
-pending_msg = []
-sequence_num = 0
-to_send_msg = []
-delivered_msg = []
-
-file_name = str(os.sys.argv[1])
-self_port = int(os.sys.argv[2])
-##file_name = "config_vm1"
-##self_port = 1234
-connect_num = 0
-name_list = []
-ip_list = []
-port_list = []
-connected = []
-socket_list = []
-
-
-init("./"+file_name)
-
-self_node_name = ""
-for i in range(connect_num+1):
-    n_name = "node"+str(i+1)
-    if n_name not in name_list:
-        self_node_name = n_name
-
-try:
-    receive_t = threading.Thread(target=server_func, args=(), daemon=True)
-    receive_t.start()
-
-    for i in range(connect_num):
-        connect_t = threading.Thread(target=establish_connection, args=(i,), daemon=True)
-        connect_t.start()
-
-    send_t = threading.Thread(target=client_func, args=(),daemon=True)
-    send_t.start()
-
-    msg_index = 1
-    for i in range(10):
-        process_to_send("msg:"+str(msg_index))
-        time.sleep(3)
-except KeyboardInterrupt:
-    print("endl:\n")
-    print(delivered_msg)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def process_delivered():
     #process according to delivered_msg
@@ -379,3 +181,28 @@ def print_info():
     print("pending_msg:",pending_msg,'\n')
     print("to_send_msg:",to_send_msg,'\n')
     print("delivered_msg:",delivered_msg,'\n')
+
+parse_str_map = dict()
+msg_replied = dict()
+pending_msg = []
+sequence_num = 0
+to_send_msg = []
+delivered_msg = []
+
+file_name = "config_vm1"
+self_port = 1234
+connect_num = 0
+name_list = []
+ip_list = []
+port_list = []
+connected = []
+socket_list = []
+
+init("./"+file_name)
+
+tmp_list = []
+for i in range(connect_num+1):
+    n_name = "node"+str(i+1)
+    if n_name not in name_list:
+        tmp_list.append(n_name)
+self_node_name = str(tmp_list[0])
