@@ -383,14 +383,9 @@ try:
     send_t = threading.Thread(target=client_func, args=())
     send_t.start()
 
-    for i in range(5):
-        time.sleep(1)
-        print("connected:",connected)
-        if False not in connected:
-            break
-        time.sleep(1)
     #modify here
-    if False not in connected:
+    if True in connected:
+        time.sleep(2)
         msg_index = 1
         for i in range(5):
             process_to_send("msg:"+str(msg_index))
