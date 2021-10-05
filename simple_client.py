@@ -180,6 +180,8 @@ def process_to_send(msg):
     to_send_msg.append(("Multicast", req_pack_str))
     
 def on_receiving(msg):
+    if len(msg)<5:
+        return
     global sequence_num,self_node_name
     msg_type = give_type(msg)
     if msg_type not in [0,1,2]:
@@ -376,16 +378,17 @@ for i in range(connect_num+1):
         self_node_name = n_name
 
 try:
+    
     receive_t = threading.Thread(target=server_func, args=())
     receive_t.start()
-
+    print("--------receive_thread ok")
     for i in range(connect_num):
         connect_t = threading.Thread(target=establish_connection, args=(i,))
         connect_t.start()
-
+    print("--------connect_thread ok")
     send_t = threading.Thread(target=client_func, args=())
     send_t.start()
-
+    print("--------send_thread ok")
     #modify here
     if True in connected:
         time.sleep(2)
