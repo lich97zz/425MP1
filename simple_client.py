@@ -390,7 +390,9 @@ try:
     send_t.start()
     print("--------send_thread ok")
     #modify here
+    sleep(2)
     if True in connected:
+        print("--------entering....")
         time.sleep(2)
         print("----------start_sending...")
         msg_index = 1
