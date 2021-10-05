@@ -13,13 +13,13 @@ def client_func():
     def send_msg():
         if len(to_send_msg) == 0:
             return
-        print("want to send:",to_send_msg)
+##        print("want to send:",to_send_msg)
         send_msg_len = len(to_send_msg)
         tmp_send_list = to_send_msg[:send_msg_len]
         for i in range(send_msg_len):
             del to_send_msg[0]
-        print("info:",len(tmp_send_list))
-        print(tmp_send_list)
+##        print("info:",len(tmp_send_list))
+##        print(tmp_send_list)
         for elm in tmp_send_list:
             if elm[0] == "Multicast":
                 multicast(elm[1])
@@ -390,20 +390,20 @@ try:
     send_t.start()
     print("--------send_thread ok")
     #modify here
+    while True:
+        if True in connected:
+            break
+        
     time.sleep(2)
     if True in connected:
-        print("--------entering....")
-        time.sleep(2)
-        print("----------start_sending...")
+
         msg_index = 1
-        process_to_send("msg:"+str(msg_index))
-        time.sleep(2)
-        process_to_send("msg:"+str(msg_index+1))
-##        for i in range(5):
-##            process_to_send("msg:"+str(msg_index))
-##            print("print_info:\n")
-##            print_info()
-##            time.sleep(4)
+
+        for i in range(5):
+            process_to_send("msg:"+str(msg_index))
+            msg_index+=1
+            time.sleep(4)
+    time.sleep(500)
 except KeyboardInterrupt:
     print("endl:\n")
     print(delivered_msg)
