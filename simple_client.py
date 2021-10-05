@@ -383,12 +383,14 @@ try:
     send_t = threading.Thread(target=client_func, args=())
     send_t.start()
 
-    msg_index = 1
-    for i in range(5):
-        process_to_send("msg:"+str(msg_index))
-        print("print_info:\n")
-        print_info()
-        time.sleep(4)
+    #modify here
+    if False not in connected:
+        msg_index = 1
+        for i in range(5):
+            process_to_send("msg:"+str(msg_index))
+            print("print_info:\n")
+            print_info()
+            time.sleep(4)
 except KeyboardInterrupt:
     print("endl:\n")
     print(delivered_msg)
