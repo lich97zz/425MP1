@@ -12,7 +12,11 @@ def client_func():
         for node_id in range(connect_num):
             if not connected[node_id]:
                 continue
-            send_msg(msg, node_id)
+            try:
+                send_msg(msg, node_id)
+            except BrokenPipeError:
+                connected[node_id] = False
+                continue
         return
     
     def send_msg(msg,node_id):
@@ -57,25 +61,11 @@ def establish_connection(node_id):
             continue
     return
     
-def server_func1():
-    global self_port
-    self_port = int(self_port)
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(('',self_port))
-    s.listen(128)
-    while True:
-        conn, addr = s.accept()
-
-        print("Connected by"+str(addr))
-        while True:
-            data = conn.recv(1024)
-            print("Received from "+str(addr)+":"+data.decode("utf-8"))
-            if not data:
-                break
-        conn.close()
-    s.close()
-        
 def server_func():
+    #a many to one receive function
+    #refer to python socket tutorial:
+    #https://realpython.com/python-sockets/#multi-connection-client-and-server
+    #https://github.com/realpython/materials/blob/master/python-sockets-tutorial/multiconn-server.py
     global self_port
     
     sel = selectors.DefaultSelector()
@@ -114,8 +104,6 @@ def server_func():
     sel.close()
 
 
-        
-    
 def init(file_name):
     global connect_num
     with open(file_name, 'r') as f:
@@ -131,9 +119,6 @@ def init(file_name):
 
             socket_list.append("")
     
-
-
-
 
 file_name = str(os.sys.argv[1])
 self_port = int(os.sys.argv[2])
@@ -158,12 +143,12 @@ for i in range(connect_num+1):
 self_node_name = str(tmp_list[0])
 
 
-print("---------displaying initial setting\n")
-print("self_node_name:",self_node_name)
-print("name_list:",name_list)
-print("ip_list:",ip_list)
-print("port_list:",port_list)
-print("connect_num:",connect_num)
+##print("---------displaying initial setting\n")
+##print("self_node_name:",self_node_name)
+##print("name_list:",name_list)
+##print("ip_list:",ip_list)
+##print("port_list:",port_list)
+##print("connect_num:",connect_num)
 
 
 receive_t = threading.Thread(target=server_func, args=())
