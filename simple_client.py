@@ -413,7 +413,8 @@ def init(file_name):
 def os_func():
     for osmsg in os.sys.stdin:
         osmsg_content = osmsg.split('\n')[0]
-        to_send_msg.append(osmsg_content)
+        process_to_send(osmsg_content)
+##        to_send_msg.append(("Multicast",osmsg_content))
 
 def process_delivered():
     while True:
