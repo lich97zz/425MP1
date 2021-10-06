@@ -21,7 +21,7 @@ def client_func():
     def send_msg():
         if len(to_send_msg) == 0:
             return
-        print("want to send:",to_send_msg)
+##        print("want to send:",to_send_msg)
         send_msg_len = len(to_send_msg)
         tmp_send_list = to_send_msg[:send_msg_len]
         for i in range(send_msg_len):
@@ -542,6 +542,7 @@ try:
             time_diff = []
         time_lag_list.append(time_lag)
         datacnt_list.append(datacnt)
+        plot_time.append(cur_time)
         datacnt = 0
 
         l1, = ax2.plot(plot_time, datacnt_list, color='g', label='Bandwidth[bps]')
@@ -550,7 +551,6 @@ try:
 
         plt.draw()
         cur_time+=1
-        plot_time.append(cur_time)
         datacnt_list.append(50-cur_time)
         time_lag_list.append(0.25+cur_time*0.01)
         plt.pause(0.1)
