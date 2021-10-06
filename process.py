@@ -21,11 +21,12 @@ def process_delivered():
             process_transaction(d)
 
 def process_transaction(msg):
-    print("enter process:"+msg)
     if len(msg)<6:
         return
+    print("enter process:"+msg)
+    print(msg.split(' '))
     success = False
-    operation = msg.split(' ')
+    operation = msg.split(' ')[0]
     if operation == "DEPOSIT":
         _,account,amount = msg.split(' ')
         if not account in balance:
