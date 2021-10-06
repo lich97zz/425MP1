@@ -302,7 +302,7 @@ def organize_pending():
             if connected.count(False) == 1:
                 print("entering here")
                 err_id = connected.index(False)
-                case = connect_num*True
+                case = connect_num*[True]
                 case[err_id] = False
                 if msg_replied[dict_key] == case:
                     content = dict_key.split('|')
