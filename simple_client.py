@@ -214,6 +214,10 @@ def on_receiving(msg):
         send_back_str = msg_set_sender(send_back_str, self_node_name)
         to_send_msg.append((sender_id, send_back_str))
     elif msg_type == 1:
+        ##???
+        if dict_key not in msg_replied:
+            organize_pending()
+            return
         msg_replied[dict_key][sender_id] = True
         new_priority = max(msg_priority, parse_str_map[dict_key][0])        
         original_priority = parse_str_map[dict_key][0]
@@ -277,20 +281,20 @@ def organize_pending():
         if i >= len(pending_msg):
             return
         if pending_msg[i][1]=="delivered":
-            cur_priority = int(pending_msg[i][0])
+##            cur_priority = int(pending_msg[i][0])
             
             delivered_seq_num += 1
             parse_str = parse_msg(pending_msg[i][2])
             delivered_priority = pending_msg[i][0]
             dict_key = remove_sender(parse_str)
-            if cur_priority > delivered_seq_num:
-                continue
+##            if cur_priority > delivered_seq_num:
+##                continue
             parse_str_map.pop(dict_key)
-            if dict_key in msg_replied:
-                msg_replied.pop(dict_key)
+##            if dict_key in msg_replied:
+##                msg_replied.pop(dict_key)
             delivered_msg.append(pending_msg[i][2].split('|')[-1])
-            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
-            del pending_msg[i]
+##            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
+##            del pending_msg[i]
             i-=1
             
     
@@ -417,6 +421,7 @@ try:
 except KeyboardInterrupt:
     print("endl:\n")
     print(delivered_msg)
+    print(pending_msg)
 finally:
     for s in socket_list:
         s.close()
