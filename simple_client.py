@@ -45,7 +45,7 @@ def client_func():
         return
     
     def unicast(msg,node_id):
-        print("Send to <node"+str(node_id+1)+">:"+msg)
+##        print("Send to <node"+str(node_id+1)+">:"+msg)
         msg=msg.encode('utf-8')
         totalsent = 0
         while totalsent < len(msg):
@@ -114,7 +114,7 @@ def server_func():
             info = recv_data.decode('utf-8')
 ##            Notice
             on_receiving(info)
-            print("Received:"+str(info))
+##            print("Received:"+str(info))
 ##            print_info()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
