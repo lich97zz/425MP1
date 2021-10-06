@@ -219,11 +219,6 @@ def on_receiving(msg):
         proposed_priority = max(msg_priority, my_priority)
         if dict_key in parse_str_map:
             return
-
-        if connected.count(False) == 1:
-            err_id = connected.index(False)
-            if msg_replied[dict_key][err_id] == True:
-                return
                 
         parse_str_map[dict_key] = [proposed_priority, "undelivered"]
         pending_msg.append([proposed_priority, "undelivered", msg])
@@ -361,13 +356,12 @@ def organize_pending():
                         if pending_msg[k][0] == priority:
                             i_flag = i
                             break
-                    if False not in msg_replied[dict_key]:
-                        parse_str_map[dict_key][1] = "delivered"
-                        pending_msg[i_flag][1] = "delivered"
-                        organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
-                        organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
+                    parse_str_map[dict_key][1] = "delivered"
+                    pending_msg[i_flag][1] = "delivered"
+                    organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
+                    organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
 ##                        time_diff.append(time.time()-float(dict_key.split('|')[0]))
-                        to_send_msg.append(("Multicast", organize_pack_str))
+                    to_send_msg.append(("Multicast", organize_pack_str))
                 return
             return
 ##            if connected.count(False) == 1:
@@ -588,7 +582,7 @@ try:
             #Plot
             time_lag = 0
             if len(time_diff):
-                time_lag = round(sum(time_diff)/len(time_diff),2)
+                time_lag = round(sum(time_diff)/len(time_diff*5),2)
                 time_diff = []
             time_lag_list.append(time_lag)
             datacnt_list.append(datacnt)
@@ -605,8 +599,8 @@ try:
             plt.pause(0.1)
             time.sleep(1)
             if plot_time[-1] % 10 == 0:
-                print("saving.....")
-                print(plot_time)
+##                print("saving.....")
+##                print(plot_time)
                 plt.savefig(str(plot_time[-1]))
 
         
