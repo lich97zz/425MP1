@@ -5,6 +5,8 @@ import sys
 import selectors
 import types
 import hashlib
+import matplotlib.pyplot as plt
+import numpy
 #Notice
 ##import ISIS
 
