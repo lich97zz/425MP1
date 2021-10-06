@@ -3,15 +3,15 @@ import threading
 
 def os_func():
     for osmsg in os.sys.stdin:
-        print(osmsg,end = '')
+##        print(osmsg,end = '')
         osmsg_content = osmsg.split('\n')[0]
-        print("info:"+osmsg_content)
+##        print("info:"+osmsg_content)
         #process_to_send(osmsg_content)
         delivered_msg.append(osmsg_content)
 
 def process_delivered():
     while True:
-        if not len(delivered_msg):
+        if len(delivered_msg) == 0:
             continue
         delivered_msg_len = len(delivered_msg)
         delivered_list = delivered_msg[:delivered_msg_len]
@@ -21,6 +21,7 @@ def process_delivered():
             process_transaction(d)
 
 def process_transaction(msg):
+    print("enter process:"+msg)
     if len(msg)<6:
         return
     success = False
