@@ -54,6 +54,7 @@ def client_func():
             if sent == 0:
                 raise RuntimeError("socket connection broken")
             totalsent = totalsent + sent
+            time.sleep(0.05)
             
     global self_node_name   
 
