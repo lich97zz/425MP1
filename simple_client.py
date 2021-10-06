@@ -39,7 +39,7 @@ def client_func():
                 continue
             try:
                 unicast(msg, node_id)
-            except:
+            except BrokenPipeError:
                 connected[node_id] = False
                 print(name_list[node_id]+" Failed...Connection reset")
                 continue
@@ -297,6 +297,7 @@ def organize_pending():
 ##            print(pending_msg)
             del pending_msg[i]
         else:
+            return
             if connected.count(False) == 1:
                 print("entering here")
                 err_id = connected.index(False)
