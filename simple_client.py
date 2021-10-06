@@ -53,13 +53,14 @@ def client_func():
             s = socket_list[node_id]
             try:
                 sent = s.send(msg[totalsent:])
+                if sent == 0:
+                    raise RuntimeError("socket connection broken")
+                totalsent = totalsent + sent
+                time.sleep(0.05)
             except:
                 connected[node_id] = False
                 print(name_list[node_id]+" Failed...Connection reset")
-            if sent == 0:
-                raise RuntimeError("socket connection broken")
-            totalsent = totalsent + sent
-            time.sleep(0.05)
+            
             
     global self_node_name   
 
