@@ -31,7 +31,7 @@ def client_func():
                 multicast(elm[1])
             else:
                 unicast(elm[1], elm[0])
-            time.sleep(0.1)
+##            time.sleep(0.1)
                 
     def multicast(msg):
         for node_id in range(connect_num):
@@ -50,17 +50,23 @@ def client_func():
         totalsent = 0
         while totalsent < len(msg):
             s = socket_list[node_id]
-            sent = s.send(msg[totalsent:])
+            try:
+                sent = s.send(msg[totalsent:])
+            except BrokenPipeError:
+                s.close()
+                connected[node_id] = False
+                return
+                
             if sent == 0:
                 raise RuntimeError("socket connection broken")
             totalsent = totalsent + sent
-            time.sleep(0.05)
+##            time.sleep(0.05)
             
     global self_node_name   
 
     while True:
         send_msg()
-        time.sleep(0.5)
+        time.sleep(0.15)
 
     return
     
@@ -277,25 +283,33 @@ def msg_set_sender(msg, sender):
 def organize_pending():
     
     #sort pending_msg, and pop out leading delivered msg to delivered_msg
-    global pending_msg,delivered_seq_num
+    global pending_msg
     pending_msg.sort()
     while len(pending_msg):
         i = 0
+        parse_str = parse_msg(pending_msg[i][2])
+        delivered_priority = pending_msg[i][0]
+        dict_key = remove_sender(parse_str)
+        
+        if False in connected:
+            for err_id in range(connect_num):
+                if connected[err_id] == True:
+                    continue
+                if msg_replied[dict_key][err_id] == False:
+                    parse_str_map.pop(dict_key)
+                    if dict_key in msg_replied:
+                        msg_replied.pop(dict_key)
+                        
+        if len(pending_msg) == 0:
+            return
+        
         if pending_msg[i][1]=="delivered":
-##            cur_priority = int(pending_msg[i][0])
-##            if cur_priority > delivered_seq_num:
-##                continue
-##            delivered_seq_num += 1
-            parse_str = parse_msg(pending_msg[i][2])
-            delivered_priority = pending_msg[i][0]
-            dict_key = remove_sender(parse_str)
-            
             parse_str_map.pop(dict_key)
             if dict_key in msg_replied:
                 msg_replied.pop(dict_key)
             delivered_msg.append(pending_msg[i][2].split('|')[-1])
-            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
-            print(pending_msg)
+##            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
+##            print(pending_msg)
             del pending_msg[i]
         else:
             return
@@ -413,13 +427,15 @@ try:
     print("Connection OK")
     time.sleep(5)
     if False not in connected:
+##        for msg in os.sys.stdin:
+##            process_to_send(msg)
 
         msg_index = 1
 
-        for i in range(9):
+        for i in range(20):
             process_to_send("msg:"+self_node_name+str(msg_index)+" ")
             msg_index+=1
-            time.sleep(1)
+            time.sleep(0.25)
     time.sleep(500)
 except KeyboardInterrupt:
     print("endl:\n")
