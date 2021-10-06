@@ -31,6 +31,7 @@ def client_func():
                 multicast(elm[1])
             else:
                 unicast(elm[1], elm[0])
+            time.sleep(0.1)
                 
     def multicast(msg):
         for node_id in range(connect_num):
@@ -58,7 +59,7 @@ def client_func():
 
     while True:
         send_msg()
-        time.sleep(0.55)
+        time.sleep(0.5)
 
     return
     
