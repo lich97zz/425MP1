@@ -300,6 +300,10 @@ def organize_pending():
             del pending_msg[i]
         else:
             if connected.count(False) == 1:
+                parse_str = parse_msg(pending_msg[i][2])
+                delivered_priority = pending_msg[i][0]
+                dict_key = remove_sender(parse_str)
+                
                 print("entering here")
                 err_id = connected.index(False)
                 case = connect_num*[True]
