@@ -114,7 +114,7 @@ def server_func():
             info = recv_data.decode('utf-8')
 ##            Notice
             on_receiving(info)
-##            print("Received:"+str(info))
+            print("Received:"+str(info))
 ##            print_info()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -415,8 +415,8 @@ try:
 
         msg_index = 1
 
-        for i in range(10):
-            process_to_send("msg:"+self_node_name+str(msg_index))
+        for i in range(9):
+            process_to_send("msg:"+self_node_name+str(msg_index)+" ")
             msg_index+=1
             time.sleep(1)
     time.sleep(500)
