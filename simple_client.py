@@ -244,7 +244,7 @@ def on_receiving(msg):
             candeliver = True
         if connected.count(False) == 1:
             err_id = connected.index(False)
-            if msg_replied[dict_key][err_id] = False:
+            if msg_replied[dict_key][err_id] == False:
                 candeliver = True
         #modify here
         if candeliver:
