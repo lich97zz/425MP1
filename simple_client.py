@@ -37,12 +37,8 @@ def client_func():
         for node_id in range(connect_num):
             if not connected[node_id]:
                 continue
-            try:
-                unicast(msg, node_id)
-            except:
-                connected[node_id] = False
-                print(name_list[node_id]+" Failed...Connection reset")
-                continue
+            unicast(msg, node_id)
+
         return
     
     def unicast(msg,node_id):
