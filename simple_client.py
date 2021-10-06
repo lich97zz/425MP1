@@ -301,23 +301,47 @@ def organize_pending():
             continue
         else:
             if connected.count(False) == 1:
-                parse_str = parse_msg(pending_msg[i][2])
-                delivered_priority = pending_msg[i][0]
-                dict_key = remove_sender(parse_str)
-                
-                print("entering here")
                 err_id = connected.index(False)
-                case = connect_num*[True]
-                case[err_id] = False
-                if dict_key not in msg_replied:
-                    return
-                if msg_replied[dict_key] == case:
-                    content = dict_key.split('|')
-                    comp_msg = '1|'+self_node_name+'|'+content[0]+'|'+content[1]
-                    print("give msg"+comp_msg)
-                    on_receiving(comp_msg)
+                for j in range(len(pending_msg)):
+                    parse_str = parse_msg(pending_msg[j][2])
+                    delivered_priority = pending_msg[j][0]
+                    dict_key = remove_sender(parse_str)
+                    if dict_key not in msg_replied:
+                        continue
+                    msg_replied[dict_key][err_id] = True
+                    priority = parse_str_map[dict_key][0]      
+                    i_flag = 0
+                    for k in range(len(pending_msg)):
+                        if pending_msg[k][0] == priority:
+                            i_flag = i
+                            break
+                    if False not in msg_replied[dict_key]:
+                        parse_str_map[dict_key][1] = "delivered"
+                        pending_msg[i_flag][1] = "delivered"
+                        organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
+                        organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
+                        to_send_msg.append(("Multicast", organize_pack_str))
+                organize_pending()
                 return
             return
+##            if connected.count(False) == 1:
+##                parse_str = parse_msg(pending_msg[i][2])
+##                delivered_priority = pending_msg[i][0]
+##                dict_key = remove_sender(parse_str)
+##                
+##                print("entering here")
+##                err_id = connected.index(False)
+##                case = connect_num*[True]
+##                case[err_id] = False
+##                if dict_key not in msg_replied:
+##                    return
+##                if msg_replied[dict_key] == case:
+##                    content = dict_key.split('|')
+##                    comp_msg = '1|'+self_node_name+'|'+content[0]+'|'+content[1]
+##                    print("give msg"+comp_msg)
+##                    on_receiving(comp_msg)
+##                return
+##            return
 
             
     
