@@ -300,7 +300,7 @@ def organize_pending():
             if dict_key in msg_replied:
                 msg_replied.pop(dict_key)
             delivered_msg.append(pending_msg[i][2].split('|')[-1])
-            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
+##            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
 ##            print(pending_msg)
             del pending_msg[i]
             continue
@@ -425,7 +425,8 @@ def process_delivered():
         for i in range(delivered_msg_len):
             del delivered_msg[0]
         for d in delivered_list:
-            process_transaction(d)
+            print("delivered:"+d)
+##            process_transaction(d)
 
 def process_transaction(msg):
     if len(msg)<6:
@@ -510,8 +511,7 @@ cur_time = 0
 
 
 try:
-    os_t = threading.Thread(target=os_func, args=())
-    os_t.start()
+    
     
     receive_t = threading.Thread(target=server_func, args=())
     receive_t.start()
@@ -530,6 +530,9 @@ try:
     print("Connection OK")
     time.sleep(5)
     if False not in connected:
+        os_t = threading.Thread(target=os_func, args=())
+        os_t.start()
+        
         process_delivered_t = threading.Thread(target=process_delivered, args=())
         process_delivered_t.start()
 
