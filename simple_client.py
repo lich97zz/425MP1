@@ -297,7 +297,7 @@ def organize_pending():
             print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
             print(pending_msg)
             del pending_msg[i]
-        else
+        else:
             return
             
     
