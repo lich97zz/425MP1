@@ -215,9 +215,9 @@ def on_receiving(msg):
         to_send_msg.append((sender_id, send_back_str))
     elif msg_type == 1:
         ##???
-        if dict_key not in msg_replied:
-            organize_pending()
-            return
+##        if dict_key not in msg_replied:
+##            organize_pending()
+##            return
         msg_replied[dict_key][sender_id] = True
         new_priority = max(msg_priority, parse_str_map[dict_key][0])        
         original_priority = parse_str_map[dict_key][0]
@@ -284,7 +284,7 @@ def organize_pending():
 ##            cur_priority = int(pending_msg[i][0])
 ##            if cur_priority > delivered_seq_num:
 ##                continue
-            delivered_seq_num += 1
+##            delivered_seq_num += 1
             parse_str = parse_msg(pending_msg[i][2])
             delivered_priority = pending_msg[i][0]
             dict_key = remove_sender(parse_str)
@@ -413,7 +413,7 @@ try:
 
         msg_index = 1
 
-        for i in range(3):
+        for i in range(10):
             process_to_send("msg:"+self_node_name+str(msg_index))
             msg_index+=1
             time.sleep(1)
