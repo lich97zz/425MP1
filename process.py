@@ -42,17 +42,18 @@ def process_transaction(msg):
                 balance[account1] -= amount
                 if not account2 in balance:
                     balance[account2] = 0
-                balance[account2] -= amount
+                balance[account2] += amount
                 success = True
     if success:
         print_balance()
 
 def print_balance():
-    print("BALANCES ")
+    print("BALANCES ", end='')
     for acc in balance:
         print(str(acc)+":"+str(balance[acc])+" ",end = '')
+    print()
 
-print("aa")  
+
 balance = dict()
 delivered_msg = []
 
@@ -61,4 +62,4 @@ os_t.start()
 
 process_delivered_t = threading.Thread(target=process_delivered, args=())
 process_delivered_t.start()
-print("bb")
+
