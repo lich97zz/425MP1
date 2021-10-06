@@ -291,11 +291,12 @@ def organize_pending():
         delivered_priority = pending_msg[i][0]
         dict_key = remove_sender(parse_str)
         
-        if False in connected:
-            for err_id in range(connect_num):
-                if connected[err_id] == True:
-                    continue
-                if msg_replied[dict_key][err_id] == False:
+        if connected.count(False) == 1:
+            print("entering here")
+            err_id = connected.index(False)
+            case = connect_num*True
+            case[err_id][False]
+                if msg_replied[dict_key] == case:
                     parse_str_map.pop(dict_key)
                     if dict_key in msg_replied:
                         msg_replied.pop(dict_key)
@@ -433,7 +434,7 @@ try:
         msg_index = 1
 
         for i in range(20):
-            process_to_send("msg:"+self_node_name+str(msg_index)+" ")
+            process_to_send("msg:"+self_node_name+" "+str(msg_index)+" ")
             msg_index+=1
             time.sleep(0.25)
     time.sleep(500)
