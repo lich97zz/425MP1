@@ -238,7 +238,16 @@ def on_receiving(msg):
                 pending_msg[i][0] = new_priority
                 i_flag = i
                 break
+
+        candeliver = False
         if False not in msg_replied[dict_key]:
+            candeliver = True
+        if connected.count(False) == 1:
+            err_id = connected.index(False)
+            if msg_replied[dict_key][err_id] = False:
+                candeliver = True
+        #modify here
+        if candeliver:
             parse_str_map[dict_key][1] = "delivered"
             pending_msg[i_flag][1] = "delivered"
             organize_pack_str = pack_send_back_msg(parse_str, new_priority, 2)
@@ -247,6 +256,31 @@ def on_receiving(msg):
             time_diff.append(time.time()-float(dict_key.split('|')[0]))
             #record diff_time for graph and plot
             organize_pending()
+
+##        if connected.count(False) == 1:
+##            err_id = connected.index(False)
+##            for j in range(len(pending_msg)):
+##                parse_str = parse_msg(pending_msg[j][2])
+##                delivered_priority = pending_msg[j][0]
+##                dict_key = remove_sender(parse_str)
+##                if dict_key not in msg_replied:
+##                    continue
+##                msg_replied[dict_key][err_id] = True
+##                priority = parse_str_map[dict_key][0]      
+##                i_flag = 0
+##                for k in range(len(pending_msg)):
+##                    if pending_msg[k][0] == priority:
+##                        i_flag = i
+##                        break
+##                if False not in msg_replied[dict_key]:
+##                    parse_str_map[dict_key][1] = "delivered"
+##                    pending_msg[i_flag][1] = "delivered"
+##                    organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
+##                    organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
+##                    time_diff.append(time.time()-float(dict_key.split('|')[0]))
+##                    to_send_msg.append(("Multicast", organize_pack_str))
+
+            
     elif msg_type == 2:
         if dict_key not in parse_str_map:
             return
@@ -502,7 +536,7 @@ fig = plt.figure()
 ax2 = plt.subplot(111)
 ax3 = ax2.twinx()
 ax2.title.set_text("Bandwidth and Average Time Delay")
-ax3.set_ylabel("Response time[ms]", color='k')
+ax3.set_ylabel("Response time[s]", color='k')
 ax2.set_ylabel("Bandwidth[bps]", color='k')
 ax2.set_xlabel('Time elapsed[s]', color='k')
 plot_time = []
@@ -559,6 +593,8 @@ try:
         plt.pause(0.1)
         time.sleep(1)
         if plot_time[-1] % 10 == 0:
+            print("saving.....")
+            print(plot_time)
             plt.savefig(str(plot_time[-1]))
 
         
