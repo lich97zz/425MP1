@@ -440,9 +440,7 @@ delivered_msg = []
 self_node_name = str(os.sys.argv[1])
 self_port = int(os.sys.argv[2])
 file_name = str(os.sys.argv[3])
-print(self_node_name)
-print(self_port)
-print(file_name)
+
 connect_num = 0
 name_list = []
 ip_list = []
@@ -453,11 +451,6 @@ delivered_seq_num = 0
 
 init("./"+file_name)
 
-##self_node_name = ""
-##for i in range(connect_num+1):
-##    n_name = "node"+str(i+1)
-##    if n_name not in name_list:
-##        self_node_name = n_name
 
 plt.ion()
 fig = plt.figure()
