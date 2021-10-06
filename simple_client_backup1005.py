@@ -50,7 +50,13 @@ def client_func():
         totalsent = 0
         while totalsent < len(msg):
             s = socket_list[node_id]
-            sent = s.send(msg[totalsent:])
+            try:
+                sent = s.send(msg[totalsent:])
+            except BrokenPipeError:
+                s.close()
+                connected[node_id] = False
+                return
+                
             if sent == 0:
                 raise RuntimeError("socket connection broken")
             totalsent = totalsent + sent
@@ -277,15 +283,28 @@ def msg_set_sender(msg, sender):
 def organize_pending():
     
     #sort pending_msg, and pop out leading delivered msg to delivered_msg
-    global pending_msg,delivered_seq_num
+    global pending_msg
     pending_msg.sort()
     while len(pending_msg):
         i = 0
+        parse_str = parse_msg(pending_msg[i][2])
+        delivered_priority = pending_msg[i][0]
+        dict_key = remove_sender(parse_str)
+        
+        if connected.count(False) == 1:
+            print("entering here")
+            err_id = connected.index(False)
+            case = connect_num*True
+            case[err_id][False]
+                if msg_replied[dict_key] == case:
+                    parse_str_map.pop(dict_key)
+                    if dict_key in msg_replied:
+                        msg_replied.pop(dict_key)
+                        
+        if len(pending_msg) == 0:
+            return
+        
         if pending_msg[i][1]=="delivered":
-            parse_str = parse_msg(pending_msg[i][2])
-            delivered_priority = pending_msg[i][0]
-            dict_key = remove_sender(parse_str)
-            
             parse_str_map.pop(dict_key)
             if dict_key in msg_replied:
                 msg_replied.pop(dict_key)
@@ -410,12 +429,11 @@ try:
     time.sleep(5)
     if False not in connected:
 ##        for msg in os.sys.stdin:
-##
 ##            process_to_send(msg)
 
         msg_index = 1
 
-        for i in range(9):
+        for i in range(20):
             process_to_send("msg:"+self_node_name+" "+str(msg_index)+" ")
             msg_index+=1
             time.sleep(0.25)
