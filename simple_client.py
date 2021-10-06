@@ -47,6 +47,8 @@ def client_func():
     
     def unicast(msg,node_id):
 ##        print("Send to <node"+str(node_id+1)+">:"+msg)
+        if connected[node_id] == False:
+            return
         msg=msg.encode('utf-8')
         totalsent = 0
         while totalsent < len(msg):
