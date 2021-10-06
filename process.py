@@ -29,12 +29,14 @@ def process_transaction(msg):
     operation = msg.split(' ')[0]
     if operation == "DEPOSIT":
         _,account,amount = msg.split(' ')
+        amount = int(amount)
         if not account in balance:
             balance[account] = 0
         balance[account] += amount
         success = True
     elif operation == "TRANSFER":
         _,account1,_,account2,amount = msg.split(' ')
+        amount = int(amount)
         if account1 in balance:
             if balance[account1] >= amount:
                 balance[account1] -= amount
