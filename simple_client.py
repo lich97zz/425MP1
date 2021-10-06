@@ -491,7 +491,7 @@ def print_balance():
     temp = []
     balance_cp = balance
     for acc in balance:
-        temp.append((int(acc),balance[acc]))
+        temp.append((acc,balance[acc]))
     temp.sort()
     print("BALANCES ", end='')
 
