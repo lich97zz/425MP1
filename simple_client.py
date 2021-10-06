@@ -407,8 +407,6 @@ def init(file_name):
 
 
 
-
-
 parse_str_map = dict()
 msg_replied = dict()
 pending_msg = []
