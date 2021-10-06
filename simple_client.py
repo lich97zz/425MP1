@@ -222,9 +222,8 @@ def on_receiving(msg):
         to_send_msg.append((sender_id, send_back_str))
     elif msg_type == 1:
         ##???
-##        if dict_key not in msg_replied:
-##            organize_pending()
-##            return
+        if dict_key not in msg_replied:
+            return
         msg_replied[dict_key][sender_id] = True
         new_priority = max(msg_priority, parse_str_map[dict_key][0])        
         original_priority = parse_str_map[dict_key][0]
@@ -245,7 +244,6 @@ def on_receiving(msg):
             organize_pending()
     elif msg_type == 2:
         original_priority = parse_str_map[dict_key][0]
-
         new_priority = msg_priority
         i_flag = 0
         for i in range(len(pending_msg)):
@@ -321,7 +319,6 @@ def organize_pending():
                         organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
                         organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
                         to_send_msg.append(("Multicast", organize_pack_str))
-                organize_pending()
                 return
             return
 ##            if connected.count(False) == 1:
