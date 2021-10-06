@@ -212,12 +212,19 @@ def on_receiving(msg):
     sender_id = give_sender_id(msg)
     dict_key = remove_sender(parse_str)
     if msg_type == 0:
+        
         my_priority = sequence_num+0.1*int(self_node_name[-1])
         my_priority = round(my_priority,1)
         
         proposed_priority = max(msg_priority, my_priority)
         if dict_key in parse_str_map:
             return
+
+        if connected.count(False) == 1:
+            err_id = connected.index(False)
+            if msg_replied[dict_key][err_id] == True:
+                return
+                
         parse_str_map[dict_key] = [proposed_priority, "undelivered"]
         pending_msg.append([proposed_priority, "undelivered", msg])
 ##        organize_pending()
@@ -294,7 +301,7 @@ def on_receiving(msg):
                 break
         parse_str_map[dict_key] = [new_priority, "delivered"]
         pending_msg[i_flag][1] = "delivered"
-        time_diff.append(time.time()-float(dict_key.split('|')[0]))
+##        time_diff.append(time.time()-float(dict_key.split('|')[0]))
         #record diff_time for graph and plot
         organize_pending()
     return
@@ -359,7 +366,7 @@ def organize_pending():
                         pending_msg[i_flag][1] = "delivered"
                         organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
                         organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
-                        time_diff.append(time.time()-float(dict_key.split('|')[0]))
+##                        time_diff.append(time.time()-float(dict_key.split('|')[0]))
                         to_send_msg.append(("Multicast", organize_pack_str))
                 return
             return
