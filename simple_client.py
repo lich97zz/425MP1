@@ -221,7 +221,6 @@ def on_receiving(msg):
         send_back_str = msg_set_sender(send_back_str, self_node_name)
         to_send_msg.append((sender_id, send_back_str))
     elif msg_type == 1:
-        ##???
         if dict_key not in msg_replied:
             return
         msg_replied[dict_key][sender_id] = True
@@ -243,6 +242,8 @@ def on_receiving(msg):
             #record diff_time for graph and plot
             organize_pending()
     elif msg_type == 2:
+        if dict_key not in parse_str_map:
+            return
         original_priority = parse_str_map[dict_key][0]
         new_priority = msg_priority
         i_flag = 0
