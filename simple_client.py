@@ -279,9 +279,8 @@ def organize_pending():
     #sort pending_msg, and pop out leading delivered msg to delivered_msg
     global pending_msg,delivered_seq_num
     pending_msg.sort()
-    for i in range(len(pending_msg)):
-        if i >= len(pending_msg):
-            return
+    while len(pending_msg):
+        i = 0
         if pending_msg[i][1]=="delivered":
 ##            cur_priority = int(pending_msg[i][0])
 ##            if cur_priority > delivered_seq_num:
@@ -298,7 +297,8 @@ def organize_pending():
             print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
             print(pending_msg)
             del pending_msg[i]
-            i-=1
+        else
+            return
             
     
 def pack_msg(msg, msg_type=0):
