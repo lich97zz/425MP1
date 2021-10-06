@@ -3,10 +3,7 @@ import threading
 
 def os_func():
     for osmsg in os.sys.stdin:
-##        print(osmsg,end = '')
         osmsg_content = osmsg.split('\n')[0]
-##        print("info:"+osmsg_content)
-        #process_to_send(osmsg_content)
         delivered_msg.append(osmsg_content)
 
 def process_delivered():
@@ -24,7 +21,6 @@ def process_transaction(msg):
     if len(msg)<6:
         return
     print("enter process:"+msg)
-    print(msg.split(' '))
     success = False
     operation = msg.split(' ')[0]
     if operation == "DEPOSIT":
