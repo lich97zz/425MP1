@@ -39,8 +39,9 @@ def client_func():
                 continue
             try:
                 unicast(msg, node_id)
-            except BrokenPipeError:
+            except:
                 connected[node_id] = False
+                print(name_list[node_id]+" Failed...Connection reset")
                 continue
         return
     
@@ -50,11 +51,9 @@ def client_func():
         totalsent = 0
         while totalsent < len(msg):
             s = socket_list[node_id]
-            try:
-                sent = s.send(msg[totalsent:])
-            except:
-                connected[node_id] = False
-                return
+
+            sent = s.send(msg[totalsent:])
+
             if sent == 0:
                 raise RuntimeError("socket connection broken")
             totalsent = totalsent + sent
@@ -306,7 +305,7 @@ def organize_pending():
                 if msg_replied[dict_key] == case:
                     content = dict_key.split('|')
                     comp_msg = '1|'+self_node_name+'|'+content[0]+'|'+content[1]
-                    print("give msg",comp_msg)
+                    print("give msg"+comp_msg)
                     on_receiving(comp_msg)
             
     

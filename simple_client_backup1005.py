@@ -39,8 +39,9 @@ def client_func():
                 continue
             try:
                 unicast(msg, node_id)
-            except BrokenPipeError:
+            except:
                 connected[node_id] = False
+                print(name_list[node_id]+" Failed...Connection reset")
                 continue
         return
     
@@ -50,12 +51,8 @@ def client_func():
         totalsent = 0
         while totalsent < len(msg):
             s = socket_list[node_id]
-            try:
-                sent = s.send(msg[totalsent:])
-            except BrokenPipeError:
-                s.close()
-                connected[node_id] = False
-                return
+            sent = s.send(msg[totalsent:])
+
                 
             if sent == 0:
                 raise RuntimeError("socket connection broken")
