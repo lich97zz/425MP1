@@ -296,10 +296,10 @@ def organize_pending():
             err_id = connected.index(False)
             case = connect_num*True
             case[err_id][False]
-                if msg_replied[dict_key] == case:
-                    parse_str_map.pop(dict_key)
-                    if dict_key in msg_replied:
-                        msg_replied.pop(dict_key)
+            if msg_replied[dict_key] == case:
+                parse_str_map.pop(dict_key)
+                if dict_key in msg_replied:
+                    msg_replied.pop(dict_key)
                         
         if len(pending_msg) == 0:
             return
