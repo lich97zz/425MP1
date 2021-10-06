@@ -51,9 +51,11 @@ def client_func():
         totalsent = 0
         while totalsent < len(msg):
             s = socket_list[node_id]
-
-            sent = s.send(msg[totalsent:])
-
+            try:
+                sent = s.send(msg[totalsent:])
+            except:
+                connected[node_id] = False
+                print(name_list[node_id]+" Failed...Connection reset")
             if sent == 0:
                 raise RuntimeError("socket connection broken")
             totalsent = totalsent + sent
@@ -434,6 +436,8 @@ except KeyboardInterrupt:
     print("endl:\n")
     print(delivered_msg)
     print(pending_msg)
+    print("\n")
+    print(msg_replied)
 finally:
     for s in socket_list:
         s.close()
