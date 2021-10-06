@@ -296,6 +296,7 @@ def organize_pending():
                 msg_replied.pop(dict_key)
             delivered_msg.append(pending_msg[i][2].split('|')[-1])
             print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
+            print(pending_msg)
             del pending_msg[i]
             i-=1
             
