@@ -208,7 +208,7 @@ def on_receiving(msg):
             return
         parse_str_map[dict_key] = [proposed_priority, "undelivered"]
         pending_msg.append([proposed_priority, "undelivered", msg])
-        organize_pending()
+##        organize_pending()
         sequence_num += 1
         send_back_str = pack_send_back_msg(parse_str, proposed_priority)
         send_back_str = msg_set_sender(send_back_str, self_node_name)
@@ -235,7 +235,7 @@ def on_receiving(msg):
             organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
             to_send_msg.append(("Multicast", organize_pack_str))
             #record diff_time for graph and plot
-        organize_pending()
+            organize_pending()
     elif msg_type == 2:
         original_priority = parse_str_map[dict_key][0]
 
@@ -281,9 +281,9 @@ def organize_pending():
         if i >= len(pending_msg):
             return
         if pending_msg[i][1]=="delivered":
-            cur_priority = int(pending_msg[i][0])
-            if cur_priority > delivered_seq_num:
-                continue
+##            cur_priority = int(pending_msg[i][0])
+##            if cur_priority > delivered_seq_num:
+##                continue
             delivered_seq_num += 1
             parse_str = parse_msg(pending_msg[i][2])
             delivered_priority = pending_msg[i][0]
