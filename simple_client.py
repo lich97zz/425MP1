@@ -31,7 +31,7 @@ def client_func():
                 multicast(elm[1])
             else:
                 unicast(elm[1], elm[0])
-##            time.sleep(0.1)
+            time.sleep(0.1)
                 
     def multicast(msg):
         for node_id in range(connect_num):
@@ -54,13 +54,13 @@ def client_func():
             if sent == 0:
                 raise RuntimeError("socket connection broken")
             totalsent = totalsent + sent
-##            time.sleep(0.05)
+            time.sleep(0.05)
             
     global self_node_name   
 
     while True:
         send_msg()
-        time.sleep(0.15)
+        time.sleep(0.5)
 
     return
     
@@ -282,6 +282,7 @@ def organize_pending():
     while len(pending_msg):
         i = 0
         if pending_msg[i][1]=="delivered":
+
             parse_str = parse_msg(pending_msg[i][2])
             delivered_priority = pending_msg[i][0]
             dict_key = remove_sender(parse_str)
@@ -290,7 +291,7 @@ def organize_pending():
             if dict_key in msg_replied:
                 msg_replied.pop(dict_key)
             delivered_msg.append(pending_msg[i][2].split('|')[-1])
-##            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
+            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
 ##            print(pending_msg)
             del pending_msg[i]
         else:
@@ -409,16 +410,13 @@ try:
     print("Connection OK")
     time.sleep(5)
     if False not in connected:
-##        for msg in os.sys.stdin:
-##
-##            process_to_send(msg)
 
         msg_index = 1
 
         for i in range(9):
-            process_to_send("msg:"+self_node_name+" "+str(msg_index)+" ")
+            process_to_send("msg:"+self_node_name+str(msg_index)+" ")
             msg_index+=1
-            time.sleep(0.25)
+            time.sleep(1)
     time.sleep(500)
 except KeyboardInterrupt:
     print("endl:\n")
