@@ -440,7 +440,9 @@ delivered_msg = []
 self_node_name = str(os.sys.argv[1])
 self_port = int(os.sys.argv[2])
 file_name = str(os.sys.argv[3])
-
+print(self_node_name)
+print(self_port)
+print(file_name)
 connect_num = 0
 name_list = []
 ip_list = []

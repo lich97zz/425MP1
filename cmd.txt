@@ -1,6 +1,7 @@
 ip1: 172.22.156.167 1234
 ip2: 172.22.158.167 1235
 ip3: 172.22.94.167   1236
+ip4: 172.22.156.168 1237
 ssh yitaohe2@fa21-cs425-g56-01.cs.illinois.edu
 ssh yitaohe2@fa21-cs425-g56-02.cs.illinois.edu
 ssh yitaohe2@fa21-cs425-g56-03.cs.illinois.edu
