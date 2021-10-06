@@ -50,7 +50,11 @@ def client_func():
         totalsent = 0
         while totalsent < len(msg):
             s = socket_list[node_id]
-            sent = s.send(msg[totalsent:])
+            try:
+                sent = s.send(msg[totalsent:])
+            except:
+                connected[node_id] = False
+                return
             if sent == 0:
                 raise RuntimeError("socket connection broken")
             totalsent = totalsent + sent
@@ -282,7 +286,6 @@ def organize_pending():
     while len(pending_msg):
         i = 0
         if pending_msg[i][1]=="delivered":
-
             parse_str = parse_msg(pending_msg[i][2])
             delivered_priority = pending_msg[i][0]
             dict_key = remove_sender(parse_str)
@@ -295,7 +298,16 @@ def organize_pending():
 ##            print(pending_msg)
             del pending_msg[i]
         else:
-            return
+            if connected.count(False) == 1:
+                print("entering here")
+                err_id = connected.index(False)
+                case = connect_num*True
+                case[err_id] = False
+                if msg_replied[dict_key] == case:
+                    content = dict_key.split('|')
+                    comp_msg = '1|'+self_node_name+'|'+content[0]+'|'+content[1]
+                    print("give msg",comp_msg)
+                    on_receiving(comp_msg)
             
     
 def pack_msg(msg, msg_type=0):
