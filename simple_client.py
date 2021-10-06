@@ -21,7 +21,7 @@ def client_func():
     def send_msg():
         if len(to_send_msg) == 0:
             return
-##        print("want to send:",to_send_msg)
+        print("want to send:",to_send_msg)
         send_msg_len = len(to_send_msg)
         tmp_send_list = to_send_msg[:send_msg_len]
         for i in range(send_msg_len):
@@ -46,6 +46,9 @@ def client_func():
     def unicast(msg,node_id):
 ##        print("Send to <node"+str(node_id+1)+">:"+msg)
         global datacnt
+        #???
+        if not isinstance(i, int):
+            return
         if connected[node_id] == False:
             return
         msg=msg.encode('utf-8')
