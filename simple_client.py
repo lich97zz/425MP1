@@ -488,9 +488,15 @@ def process_transaction(msg):
         print_balance()
 
 def print_balance():
-    print("BALANCES ", end='')
+    temp = []
+    balance_cp = balance
     for acc in balance:
-        print(str(acc)+":"+str(balance[acc])+" ",end = '')
+        temp.append((int(acc),balance[acc]))
+    temp.sort()
+    print("BALANCES ", end='')
+
+    for elm in temp:
+        print(str(elm[0])+":"+str(elm[1])+" ",end = '')
     print()
 
 
@@ -571,31 +577,31 @@ try:
         process_delivered_t.start()
 
 
+        while True:
+            #Plot
+            time_lag = 0
+            if len(time_diff):
+                time_lag = round(sum(time_diff)/len(time_diff),2)
+                time_diff = []
+            time_lag_list.append(time_lag)
+            datacnt_list.append(datacnt)
+            plot_time.append(cur_time)
+            datacnt = 0
 
-        #Plot
-        time_lag = 0
-        if len(time_diff):
-            time_lag = round(sum(time_diff)/len(time_diff),2)
-            time_diff = []
-        time_lag_list.append(time_lag)
-        datacnt_list.append(datacnt)
-        plot_time.append(cur_time)
-        datacnt = 0
+            l1, = ax2.plot(plot_time, datacnt_list, color='g', label='Bandwidth[bps]')
+            l2, = ax3.plot(plot_time, time_lag_list, color='b', label='Response time[s]')
+            ax2.legend((l1,l2),('Bandwidth','Response time'),loc='upper right')
 
-        l1, = ax2.plot(plot_time, datacnt_list, color='g', label='Bandwidth[bps]')
-        l2, = ax3.plot(plot_time, time_lag_list, color='b', label='Response time[s]')
-        ax2.legend((l1,l2),('Bandwidth','Response time'),loc='upper right')
-
-        plt.draw()
-        cur_time+=1
-        datacnt_list.append(50-cur_time)
-        time_lag_list.append(0.25+cur_time*0.01)
-        plt.pause(0.1)
-        time.sleep(1)
-        if plot_time[-1] % 10 == 0:
-            print("saving.....")
-            print(plot_time)
-            plt.savefig(str(plot_time[-1]))
+            plt.draw()
+            cur_time+=1
+            datacnt_list.append(50-cur_time)
+            time_lag_list.append(0.25+cur_time*0.01)
+            plt.pause(0.1)
+            time.sleep(1)
+            if plot_time[-1] % 10 == 0:
+                print("saving.....")
+                print(plot_time)
+                plt.savefig(str(plot_time[-1]))
 
         
         
