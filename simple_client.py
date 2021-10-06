@@ -594,8 +594,7 @@ try:
 
             plt.draw()
             cur_time+=1
-            datacnt_list.append(50-cur_time)
-            time_lag_list.append(0.25+cur_time*0.01)
+
             plt.pause(0.1)
             time.sleep(1)
             if plot_time[-1] % 10 == 0:
