@@ -298,6 +298,7 @@ def organize_pending():
             print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
 ##            print(pending_msg)
             del pending_msg[i]
+            continue
         else:
             if connected.count(False) == 1:
                 parse_str = parse_msg(pending_msg[i][2])
@@ -308,12 +309,16 @@ def organize_pending():
                 err_id = connected.index(False)
                 case = connect_num*[True]
                 case[err_id] = False
+                if dict_key not in msg_replied:
+                    return
                 if msg_replied[dict_key] == case:
                     content = dict_key.split('|')
                     comp_msg = '1|'+self_node_name+'|'+content[0]+'|'+content[1]
                     print("give msg"+comp_msg)
                     on_receiving(comp_msg)
+                return
             return
+
             
     
 def pack_msg(msg, msg_type=0):
