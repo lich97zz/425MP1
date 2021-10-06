@@ -58,6 +58,7 @@ def client_func():
             except:
                 connected[node_id] = False
                 print(name_list[node_id]+" Failed...Connection reset")
+                break
             
             
     global self_node_name   
