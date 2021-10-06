@@ -7,33 +7,28 @@ import types
 import hashlib
 import matplotlib.pyplot as plt
 import numpy
-#Notice
-##import ISIS
 
-def print_info():
-    print("parse_str_map:",parse_str_map,'\n')
-    print("msg_replied:",msg_replied,'\n')
-    print("pending_msg:",pending_msg,'\n')
-    print("to_send_msg:",to_send_msg,'\n')
-    print("delivered_msg:",delivered_msg,'\n')
+
+##def print_info():
+##    print("parse_str_map:",parse_str_map,'\n')
+##    print("msg_replied:",msg_replied,'\n')
+##    print("pending_msg:",pending_msg,'\n')
+##    print("to_send_msg:",to_send_msg,'\n')
+##    print("delivered_msg:",delivered_msg,'\n')
     
 def client_func():
     def send_msg():
         if len(to_send_msg) == 0:
             return
-##        print("want to send:",to_send_msg)
         send_msg_len = len(to_send_msg)
         tmp_send_list = to_send_msg[:send_msg_len]
         for i in range(send_msg_len):
             del to_send_msg[0]
-##        print("info:",len(tmp_send_list))
-##        print(tmp_send_list)
         for elm in tmp_send_list:
             if elm[0] == "Multicast":
                 multicast(elm[1])
             else:
                 unicast(elm[1], elm[0])
-##            time.sleep(0.1)
                 
     def multicast(msg):
         for node_id in range(connect_num):
@@ -44,9 +39,7 @@ def client_func():
         return
     
     def unicast(msg,node_id):
-##        print("Send to <node"+str(node_id+1)+">:"+msg)
         global datacnt
-        #???
         if not isinstance(i, int):
             return
         if connected[node_id] == False:
@@ -64,7 +57,6 @@ def client_func():
                 time.sleep(0.05)
             except:
                 connected[node_id] = False
-                print(name_list[node_id]+" Failed...Connection reset")
                 break
             
             
@@ -88,13 +80,10 @@ def establish_connection(node_id):
     socket_list[node_id] = s
     while True:
         try:
-            print("Sending connection req to:"+host_ip+" "+str(port)+'\n')
             s.connect((host_ip, port))
-            print("***Connected to "+name_list[node_id])
             connected[node_id] = True
             break
         except:
-            print("...Can't connect to "+name_list[node_id]+", reconnect soon...\n")
             time.sleep(1.5)
             continue
     return
@@ -125,14 +114,11 @@ def server_func():
                 sel.unregister(s)
                 s.close()
             info = recv_data.decode('utf-8')
-##            Notice
             on_receiving(info)
             try:
                 datacnt += sys.getsizeof(info)
             except:
                 return
-##            print("Received:"+str(info))
-##            print_info()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('', self_port))
@@ -164,20 +150,6 @@ def init(file_name):
             connected.append(False)
 
             socket_list.append("")
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -222,7 +194,6 @@ def on_receiving(msg):
                 
         parse_str_map[dict_key] = [proposed_priority, "undelivered"]
         pending_msg.append([proposed_priority, "undelivered", msg])
-##        organize_pending()
         sequence_num += 1
         send_back_str = pack_send_back_msg(parse_str, proposed_priority)
         send_back_str = msg_set_sender(send_back_str, self_node_name)
@@ -248,7 +219,6 @@ def on_receiving(msg):
             err_id = connected.index(False)
             if msg_replied[dict_key][err_id] == False:
                 candeliver = True
-        #modify here
         if candeliver:
             parse_str_map[dict_key][1] = "delivered"
             pending_msg[i_flag][1] = "delivered"
@@ -256,33 +226,7 @@ def on_receiving(msg):
             organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
             to_send_msg.append(("Multicast", organize_pack_str))
             time_diff.append(time.time()-float(dict_key.split('|')[0]))
-            #record diff_time for graph and plot
             organize_pending()
-
-##        if connected.count(False) == 1:
-##            err_id = connected.index(False)
-##            for j in range(len(pending_msg)):
-##                parse_str = parse_msg(pending_msg[j][2])
-##                delivered_priority = pending_msg[j][0]
-##                dict_key = remove_sender(parse_str)
-##                if dict_key not in msg_replied:
-##                    continue
-##                msg_replied[dict_key][err_id] = True
-##                priority = parse_str_map[dict_key][0]      
-##                i_flag = 0
-##                for k in range(len(pending_msg)):
-##                    if pending_msg[k][0] == priority:
-##                        i_flag = i
-##                        break
-##                if False not in msg_replied[dict_key]:
-##                    parse_str_map[dict_key][1] = "delivered"
-##                    pending_msg[i_flag][1] = "delivered"
-##                    organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
-##                    organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
-##                    time_diff.append(time.time()-float(dict_key.split('|')[0]))
-##                    to_send_msg.append(("Multicast", organize_pack_str))
-
-            
     elif msg_type == 2:
         if dict_key not in parse_str_map:
             return
@@ -296,8 +240,6 @@ def on_receiving(msg):
                 break
         parse_str_map[dict_key] = [new_priority, "delivered"]
         pending_msg[i_flag][1] = "delivered"
-##        time_diff.append(time.time()-float(dict_key.split('|')[0]))
-        #record diff_time for graph and plot
         organize_pending()
     return
 
@@ -321,7 +263,6 @@ def msg_set_sender(msg, sender):
 
     
 def organize_pending():
-    
     #sort pending_msg, and pop out leading delivered msg to delivered_msg
     global pending_msg,delivered_seq_num
     pending_msg.sort()
@@ -336,8 +277,6 @@ def organize_pending():
             if dict_key in msg_replied:
                 msg_replied.pop(dict_key)
             delivered_msg.append(pending_msg[i][2].split('|')[-1])
-##            print("!!Delivered "+pending_msg[i][2].split('|')[-1]+" at :",delivered_priority)
-##            print(pending_msg)
             del pending_msg[i]
             continue
         else:
@@ -359,29 +298,10 @@ def organize_pending():
                     parse_str_map[dict_key][1] = "delivered"
                     pending_msg[i_flag][1] = "delivered"
                     organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
-                    organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
-##                        time_diff.append(time.time()-float(dict_key.split('|')[0]))
+                    organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)[0]))
                     to_send_msg.append(("Multicast", organize_pack_str))
                 return
             return
-##            if connected.count(False) == 1:
-##                parse_str = parse_msg(pending_msg[i][2])
-##                delivered_priority = pending_msg[i][0]
-##                dict_key = remove_sender(parse_str)
-##                
-##                print("entering here")
-##                err_id = connected.index(False)
-##                case = connect_num*[True]
-##                case[err_id] = False
-##                if dict_key not in msg_replied:
-##                    return
-##                if msg_replied[dict_key] == case:
-##                    content = dict_key.split('|')
-##                    comp_msg = '1|'+self_node_name+'|'+content[0]+'|'+content[1]
-##                    print("give msg"+comp_msg)
-##                    on_receiving(comp_msg)
-##                return
-##            return
 
             
     
@@ -449,7 +369,6 @@ def os_func():
     for osmsg in os.sys.stdin:
         osmsg_content = osmsg.split('\n')[0]
         process_to_send(osmsg_content)
-##        to_send_msg.append(("Multicast",osmsg_content))
 
 def process_delivered():
     while True:
@@ -518,10 +437,10 @@ sequence_num = 0
 to_send_msg = []
 delivered_msg = []
 
-file_name = str(os.sys.argv[1])
+self_node_name = str(os.sys.argv[1])
 self_port = int(os.sys.argv[2])
-##file_name = "config_vm1"
-##self_port = 1234
+file_name = str(os.sys.argv[3])
+
 connect_num = 0
 name_list = []
 ip_list = []
@@ -532,11 +451,11 @@ delivered_seq_num = 0
 
 init("./"+file_name)
 
-self_node_name = ""
-for i in range(connect_num+1):
-    n_name = "node"+str(i+1)
-    if n_name not in name_list:
-        self_node_name = n_name
+##self_node_name = ""
+##for i in range(connect_num+1):
+##    n_name = "node"+str(i+1)
+##    if n_name not in name_list:
+##        self_node_name = n_name
 
 plt.ion()
 fig = plt.figure()
@@ -564,11 +483,10 @@ try:
     send_t = threading.Thread(target=client_func, args=())
     send_t.start()
 
-    #modify here
     while True:
         if False not in connected:
             break
-    print("Connection OK")
+##    print("Fully Connected...Start in 5 seconds...")
     time.sleep(5)
     if False not in connected:
         os_t = threading.Thread(target=os_func, args=())
@@ -599,25 +517,16 @@ try:
             plt.pause(0.1)
             time.sleep(1)
             if plot_time[-1] % 10 == 0:
-##                print("saving.....")
-##                print(plot_time)
                 plt.savefig(str(plot_time[-1]))
 
-        
-        
-##        msg_index = 1
-##
-##        for i in range(9):
-##            process_to_send("msg:"+self_node_name+str(msg_index)+" ")
-##            msg_index+=1
-##            time.sleep(1)
+
     time.sleep(500)
 except KeyboardInterrupt:
-    print("endl:\n")
-    print(delivered_msg)
-    print(pending_msg)
-    print("\n")
-    print(msg_replied)
+    print("")
+##    print(delivered_msg)
+##    print(pending_msg)
+##    print("\n")
+##    print(msg_replied)
 finally:
     for s in socket_list:
         s.close()
