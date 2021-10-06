@@ -20,7 +20,6 @@ def process_delivered():
 def process_transaction(msg):
     if len(msg)<6:
         return
-    print("enter process:"+msg)
     success = False
     operation = msg.split(' ')[0]
     if operation == "DEPOSIT":

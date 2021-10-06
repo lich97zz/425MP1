@@ -43,6 +43,7 @@ def client_func():
     
     def unicast(msg,node_id):
 ##        print("Send to <node"+str(node_id+1)+">:"+msg)
+        global datacnt
         if connected[node_id] == False:
             return
         msg=msg.encode('utf-8')
@@ -51,6 +52,7 @@ def client_func():
             s = socket_list[node_id]
             try:
                 sent = s.send(msg[totalsent:])
+                datacnt += sys.getsizeof(sent)
                 if sent == 0:
                     raise RuntimeError("socket connection broken")
                 totalsent = totalsent + sent
@@ -109,6 +111,7 @@ def server_func():
 
 
     def process_connection(key, mask):
+        global datacnt
         data = key.data
         s = key.fileobj
         if mask & selectors.EVENT_READ:
@@ -119,6 +122,10 @@ def server_func():
             info = recv_data.decode('utf-8')
 ##            Notice
             on_receiving(info)
+            try:
+                datacnt += sys.getsizeof(info)
+            except:
+                return
 ##            print("Received:"+str(info))
 ##            print_info()
 
@@ -169,13 +176,6 @@ def init(file_name):
 
 
 
-
-
-
-
-def process_delivered():
-    #process according to delivered_msg
-    return
 
 def process_to_send(msg):
     global connect_num,sequence_num
@@ -239,6 +239,7 @@ def on_receiving(msg):
             organize_pack_str = pack_send_back_msg(parse_str, new_priority, 2)
             organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
             to_send_msg.append(("Multicast", organize_pack_str))
+            time_diff.append(time.time()-float(dict_key.split('|')[0]))
             #record diff_time for graph and plot
             organize_pending()
     elif msg_type == 2:
@@ -254,7 +255,7 @@ def on_receiving(msg):
                 break
         parse_str_map[dict_key] = [new_priority, "delivered"]
         pending_msg[i_flag][1] = "delivered"
-
+        time_diff.append(time.time()-float(dict_key.split('|')[0]))
         #record diff_time for graph and plot
         organize_pending()
     return
@@ -319,6 +320,7 @@ def organize_pending():
                         pending_msg[i_flag][1] = "delivered"
                         organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
                         organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
+                        time_diff.append(time.time()-float(dict_key.split('|')[0]))
                         to_send_msg.append(("Multicast", organize_pack_str))
                 return
             return
@@ -403,8 +405,62 @@ def init(file_name):
 
 
 
+def os_func():
+    for osmsg in os.sys.stdin:
+        osmsg_content = osmsg.split('\n')[0]
+        to_send_msg.append(osmsg_content)
+
+def process_delivered():
+    while True:
+        if len(delivered_msg) == 0:
+            continue
+        delivered_msg_len = len(delivered_msg)
+        delivered_list = delivered_msg[:delivered_msg_len]
+        for i in range(delivered_msg_len):
+            del delivered_msg[0]
+        for d in delivered_list:
+            process_transaction(d)
+
+def process_transaction(msg):
+    if len(msg)<6:
+        return
+    success = False
+    operation = msg.split(' ')[0]
+    if operation == "DEPOSIT":
+        _,account,amount = msg.split(' ')
+        amount = int(amount)
+        if not account in balance:
+            balance[account] = 0
+        balance[account] += amount
+        success = True
+    elif operation == "TRANSFER":
+        _,account1,_,account2,amount = msg.split(' ')
+        amount = int(amount)
+        if account1 in balance:
+            if balance[account1] >= amount:
+                balance[account1] -= amount
+                if not account2 in balance:
+                    balance[account2] = 0
+                balance[account2] += amount
+                success = True
+    if success:
+        print_balance()
+
+def print_balance():
+    print("BALANCES ", end='')
+    for acc in balance:
+        print(str(acc)+":"+str(balance[acc])+" ",end = '')
+    print()
 
 
+
+
+datacnt = 0
+datacnt_list = []
+time_diff = []
+time_lag_list = []
+balance = dict()
+delivered_msg = []
 
 
 parse_str_map = dict()
@@ -434,7 +490,22 @@ for i in range(connect_num+1):
     if n_name not in name_list:
         self_node_name = n_name
 
+plt.ion()
+fig = plt.figure()
+ax2 = plt.subplot(111)
+ax3 = ax2.twinx()
+ax2.title.set_text("Bandwidth and Average Time Delay")
+ax3.set_ylabel("Response time[ms]", color='k')
+ax2.set_ylabel("Bandwidth[bps]", color='k')
+ax2.set_xlabel('Time elapsed[s]', color='k')
+plot_time = []
+
+cur_time = 0
+
+
 try:
+    os_t = threading.Thread(target=os_func, args=())
+    os_t.start()
     
     receive_t = threading.Thread(target=server_func, args=())
     receive_t.start()
@@ -453,13 +524,42 @@ try:
     print("Connection OK")
     time.sleep(5)
     if False not in connected:
+        process_delivered_t = threading.Thread(target=process_delivered, args=())
+        process_delivered_t.start()
 
-        msg_index = 1
 
-        for i in range(9):
-            process_to_send("msg:"+self_node_name+str(msg_index)+" ")
-            msg_index+=1
-            time.sleep(1)
+
+        #Plot
+        time_lag = 0
+        if len(time_diff):
+            time_lag = round(sum(time_diff)/len(time_diff),2)
+            time_diff = []
+        time_lag_list.append(time_lag)
+        datacnt_list.append(datacnt)
+        datacnt = 0
+
+        l1, = ax2.plot(plot_time, datacnt_list, color='g', label='Bandwidth[bps]')
+        l2, = ax3.plot(plot_time, time_lag_list, color='b', label='Response time[s]')
+        ax2.legend((l1,l2),('Bandwidth','Response time'),loc='upper right')
+
+        plt.draw()
+        cur_time+=1
+        plot_time.append(cur_time)
+        datacnt_list.append(50-cur_time)
+        time_lag_list.append(0.25+cur_time*0.01)
+        plt.pause(0.1)
+        time.sleep(1)
+        if plot_time[-1] % 10 == 0:
+            plt.savefig(str(plot_time[-1]))
+
+        
+        
+##        msg_index = 1
+##
+##        for i in range(9):
+##            process_to_send("msg:"+self_node_name+str(msg_index)+" ")
+##            msg_index+=1
+##            time.sleep(1)
     time.sleep(500)
 except KeyboardInterrupt:
     print("endl:\n")
