@@ -298,7 +298,7 @@ def organize_pending():
                     parse_str_map[dict_key][1] = "delivered"
                     pending_msg[i_flag][1] = "delivered"
                     organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
-                    organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)[0]))
+                    organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
                     to_send_msg.append(("Multicast", organize_pack_str))
                 return
             return
