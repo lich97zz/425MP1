@@ -33,7 +33,7 @@ def client_func():
                 multicast(elm[1])
             else:
                 unicast(elm[1], elm[0])
-            time.sleep(0.1)
+##            time.sleep(0.1)
                 
     def multicast(msg):
         for node_id in range(connect_num):
@@ -425,11 +425,11 @@ def process_delivered():
         for i in range(delivered_msg_len):
             del delivered_msg[0]
         for d in delivered_list:
-            print("delivered:"+d)
-##            process_transaction(d)
+##            print("delivered:"+d)
+            process_transaction(d)
 
 def process_transaction(msg):
-    if len(msg)<6:
+    if len(msg)<5:
         return
     success = False
     operation = msg.split(' ')[0]
