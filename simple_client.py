@@ -62,7 +62,7 @@ def client_func():
 
     while True:
         send_msg()
-
+        time.sleep(0.01)
     return
     
 def establish_connection(node_id):
@@ -73,7 +73,7 @@ def establish_connection(node_id):
     port = port_list[node_id]
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(1)
+    s.settimeout(0.25)
     socket_list[node_id] = s
     while True:
         try:
@@ -81,7 +81,7 @@ def establish_connection(node_id):
             connected[node_id] = True
             break
         except:
-            time.sleep(0.5)
+            time.sleep(0.25)
             continue
     return
     
@@ -328,13 +328,11 @@ def give_priority(msg):
 
 def give_type(msg):
     contents = msg.split('|')
-    if len(contents) < 1:
-        print("Err in give_type function:"+msg)
+    if len(contents) < 1 or content[0] not in ['0','1','2']:
         return -1
     msg_type = int(contents[0])
     if msg_type in [0,1,2]:
         return msg_type
-    print("Err in give_type function:"+msg)
     return -1
 
 def parse_msg(msg):
