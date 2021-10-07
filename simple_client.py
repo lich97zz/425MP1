@@ -100,7 +100,7 @@ def server_func():
     #https://realpython.com/python-sockets/#multi-connection-client-and-server
     #https://github.com/realpython/materials/blob/master/python-sockets-tutorial/multiconn-server.py
     global self_port, end_of_program
-    
+    global received_msg
     sel = selectors.DefaultSelector()
     def accept_func(sock):
         conn, addr = sock.accept() 
@@ -110,17 +110,18 @@ def server_func():
         sel.register(conn, events, data=data)
 
 
-    def process_connection(key, mask, recv_data):
+    def process_connection(key, mask):
         global datacnt
         data = key.data
         s = key.fileobj
         if mask & selectors.EVENT_READ:
-            recv_data += s.recv(2048)
+            recv_data = s.recv(2048)
             if not recv_data:
                 sel.unregister(s)
                 s.close()
-            lines = recv_data.split(b'#')
-            recv_data = lines[-1]
+            received_msg += recv_data
+            lines = received_msg.split(b'#')
+            received_msg = lines[-1]
             info = lines[:-1]
             
 ##            info = recv_data.decode('utf-8')
@@ -138,7 +139,7 @@ def server_func():
 
                 on_receiving(elm)
                 datacnt += sys.getsizeof(elm)
-        return recv_data
+
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('', self_port))
@@ -149,11 +150,10 @@ def server_func():
     while True:
         if end_of_program:
             break
-        recv_data = b''
         elm = sel.select(timeout=None)
         for key, mask in elm:
             if key.data:
-                recv_data = process_connection(key, mask, recv_data)
+                process_connection(key, mask)
             else:
                 accept_func(key.fileobj)
                 
@@ -453,7 +453,7 @@ time_diff = []
 time_lag_list = []
 balance = dict()
 delivered_msg = []
-
+received_msg = b''
 
 parse_str_map = dict()
 msg_replied = dict()

@@ -1,11 +1,10 @@
 import time
+a = 123
 def f():
-    
-    a = 123
+    global a
     def g():
-        nonlocal a
-        a = 345
-    print(a)
+        print(a)
+    g()
 
 f()
     
