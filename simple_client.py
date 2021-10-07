@@ -24,6 +24,7 @@ def client_func():
         for i in range(send_msg_len):
             del to_send_msg[0]
         for elm in tmp_send_list:
+            print("    Sending:"+elm[1])
             if elm[0] == "Multicast":
                 multicast(elm[1])
             else:
@@ -112,6 +113,7 @@ def server_func():
                 sel.unregister(s)
                 s.close()
             info = recv_data.decode('utf-8')
+            print("    Received:"+info)
             on_receiving(info)
             try:
                 datacnt += sys.getsizeof(info)
