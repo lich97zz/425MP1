@@ -111,7 +111,7 @@ def server_func():
 
 
     def process_connection(key, mask):
-        global datacnt
+        global datacnt, received_msg
         data = key.data
         s = key.fileobj
         if mask & selectors.EVENT_READ:
