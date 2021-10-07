@@ -111,18 +111,20 @@ def server_func():
 
 
     def process_connection(key, mask):
-        global datacnt, received_msg
+        global datacnt, received_msg,receive_mtx
         data = key.data
         s = key.fileobj
         if mask & selectors.EVENT_READ:
+            
             recv_data = s.recv(2048)
             if not recv_data:
                 sel.unregister(s)
                 s.close()
-            received_msg += recv_data
-            lines = received_msg.split(b'#')
-            received_msg = lines[-1]
-            info = lines[:-1]
+            with receive_mtx:
+                received_msg += recv_data
+                lines = received_msg.split(b'#')
+                received_msg = lines[-1]
+                info = lines[:-1]
             
 ##            info = recv_data.decode('utf-8')
 ##Received info are merged, modify here
@@ -454,6 +456,7 @@ time_lag_list = []
 balance = dict()
 delivered_msg = []
 received_msg = b''
+receive_mtx = threading.Lock()
 
 parse_str_map = dict()
 msg_replied = dict()
