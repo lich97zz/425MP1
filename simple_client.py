@@ -27,7 +27,7 @@ def client_func():
             #flaw here(the received function can't split correctly)
             #, add a end character # for each msg
             print("    Sending:"+elm[1])
-            if len(elm.split('|')) < 5:
+            if len(elm[1].split('|')) < 5:
                     print(" ********************************")
                     print(" ********************************")
                     print(" ********************************")
