@@ -4,7 +4,6 @@ import threading
 import sys
 import selectors
 import types
-import hashlib
 import matplotlib.pyplot as plt
 import numpy
 
@@ -54,7 +53,6 @@ def client_func():
                 if sent == 0:
                     raise RuntimeError("socket connection broken")
                 totalsent = totalsent + sent
-                time.sleep(0.05)
             except:
                 connected[node_id] = False
                 break
@@ -64,7 +62,6 @@ def client_func():
 
     while True:
         send_msg()
-        time.sleep(0.5)
 
     return
     
@@ -84,7 +81,7 @@ def establish_connection(node_id):
             connected[node_id] = True
             break
         except:
-            time.sleep(1.5)
+            time.sleep(0.5)
             continue
     return
     
