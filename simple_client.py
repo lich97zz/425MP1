@@ -119,7 +119,7 @@ def server_func():
 ##Received info are merged, modify here
             print("    Total Received:"+info)
             for elm in info.split('#'):
-                on_receiving(elm)
+##                on_receiving(elm)
                 print("    Received:"+elm)
             try:
                 datacnt += sys.getsizeof(info)
