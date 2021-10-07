@@ -27,6 +27,11 @@ def client_func():
             #flaw here(the received function can't split correctly)
             #, add a end character # for each msg
             print("    Sending:"+elm[1])
+            if len(elm.split('|')) < 5:
+                    print(" ********************************")
+                    print(" ********************************")
+                    print(" ********************************")
+                    print(" ********************************")
             if elm[0] == "Multicast":
                 multicast(elm[1]+"#")
             else:
@@ -119,8 +124,15 @@ def server_func():
 ##Received info are merged, modify here
             print("    Total Received:"+info)
             for elm in info.split('#'):
-##                on_receiving(elm)
+                if len(elm) < 3:
+                    continue
                 print("    Received:"+elm)
+                if len(elm.split('|')) < 5:
+                    print(" ********************************")
+                    print(" ********************************")
+                    print(" ********************************")
+                    print(" ********************************")
+                on_receiving(elm)
             try:
                 datacnt += sys.getsizeof(info)
             except:
