@@ -109,7 +109,7 @@ def server_func():
         data = key.data
         s = key.fileobj
         if mask & selectors.EVENT_READ:
-            
+            info = []
             recv_data = s.recv(2048)
             if not recv_data:
                 sel.unregister(s)
