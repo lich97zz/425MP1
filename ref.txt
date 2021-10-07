@@ -1,2 +1,0 @@
-https://realpython.com/python-sockets/#multi-connection-client-and-server
-https://github.com/realpython/materials/tree/master/python-sockets-tutorial
