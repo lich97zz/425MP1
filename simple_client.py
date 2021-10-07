@@ -172,7 +172,7 @@ def server_func():
     def accept_func(sock):
         conn, addr = sock.accept() 
         conn.setblocking(False)
-        data = types.SimpleNamespace(addr=addr, inb=b"")
+        data = types.SimpleNamespace(addr=addr, inb=b"", outb=b"")
         events = selectors.EVENT_READ | selectors.EVENT_WRITE
         sel.register(conn, events, data=data)
 
