@@ -328,12 +328,11 @@ def give_priority(msg):
 
 def give_type(msg):
     contents = msg.split('|')
-    if len(contents) < 1 or content[0] not in ['0','1','2']:
+    if len(contents) < 1 or contents[0] not in ['0','1','2']:
         return -1
     msg_type = int(contents[0])
-    if msg_type in [0,1,2]:
-        return msg_type
-    return -1
+    return msg_type
+
 
 def parse_msg(msg):
     contents = msg.split('|')
