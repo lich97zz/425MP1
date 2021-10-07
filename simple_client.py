@@ -99,7 +99,7 @@ def server_func():
     #refer to python socket tutorial:
     #https://realpython.com/python-sockets/#multi-connection-client-and-server
     #https://github.com/realpython/materials/blob/master/python-sockets-tutorial/multiconn-server.py
-    global self_port
+    global self_port, end_of_program
     
     sel = selectors.DefaultSelector()
     def accept_func(sock):
@@ -110,19 +110,23 @@ def server_func():
         sel.register(conn, events, data=data)
 
 
-    def process_connection(key, mask):
+    def process_connection(key, mask, recv_data):
         global datacnt
         data = key.data
         s = key.fileobj
         if mask & selectors.EVENT_READ:
-            recv_data = s.recv(2048)
+            recv_data += s.recv(2048)
             if not recv_data:
                 sel.unregister(s)
                 s.close()
-            info = recv_data.decode('utf-8')
+            lines = recv_data.split(b'#')
+            recv_data = lines[-1]
+            info = lines[:-1]
+##            info = recv_data.decode('utf-8')
 ##Received info are merged, modify here
             
-            for elm in info.split('#'):
+            for elm in info:
+                elm = elm.decode('utf-8')
                 if len(elm) < 3:
                     continue
                 
@@ -136,7 +140,7 @@ def server_func():
             try:
                 datacnt += sys.getsizeof(info)
             except:
-                return
+                return recv_data
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('', self_port))
@@ -145,12 +149,17 @@ def server_func():
     sel.register(sock, selectors.EVENT_READ, data=None)
 
     while True:
+        if end_of_program:
+            break
+        recv_data = b''
         elm = sel.select(timeout=None)
         for key, mask in elm:
             if key.data:
-                process_connection(key, mask)
+                recv_data = process_connection(key, mask, recv_data)
             else:
                 accept_func(key.fileobj)
+                
+    sock.close()
     sel.close()
 
 
@@ -466,6 +475,7 @@ port_list = []
 connected = []
 socket_list = []
 delivered_seq_num = 0
+end_of_program = False
 
 init("./"+file_name)
 
@@ -542,4 +552,5 @@ except KeyboardInterrupt:
 ##    print(msg_replied)
 finally:
     for s in socket_list:
+        end_of_program = True
         s.close()
