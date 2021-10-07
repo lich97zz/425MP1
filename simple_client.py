@@ -24,11 +24,13 @@ def client_func():
         for i in range(send_msg_len):
             del to_send_msg[0]
         for elm in tmp_send_list:
+            #flaw here(the received function can't split correctly)
+            #, add a end character # for each msg
             print("    Sending:"+elm[1])
             if elm[0] == "Multicast":
-                multicast(elm[1])
+                multicast(elm[1]+"#")
             else:
-                unicast(elm[1], elm[0])
+                unicast(elm[1]+"#", elm[0])
                 
     def multicast(msg):
         for node_id in range(connect_num):
@@ -63,7 +65,7 @@ def client_func():
 
     while True:
         send_msg()
-        time.sleep(0.01)
+        time.sleep(0.001)
 
     return
     
@@ -75,7 +77,7 @@ def establish_connection(node_id):
     port = port_list[node_id]
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(0.5)
+    s.settimeout(0.1)
     socket_list[node_id] = s
     while True:
         try:
@@ -83,10 +85,11 @@ def establish_connection(node_id):
             connected[node_id] = True
             break
         except:
-            time.sleep(0.5)
+            time.sleep(0.1)
             continue
     return
-    
+
+
 def server_func():
     #a many to one receive function
     #refer to python socket tutorial:
@@ -108,13 +111,15 @@ def server_func():
         data = key.data
         s = key.fileobj
         if mask & selectors.EVENT_READ:
-            recv_data = s.recv(1024)
+            recv_data = s.recv(2048)
             if not recv_data:
                 sel.unregister(s)
                 s.close()
             info = recv_data.decode('utf-8')
-            print("    Received:"+info)
-            on_receiving(info)
+##Received info are merged, modify here
+            for elm in info.split('#'):
+                on_receiving(elm)
+                print("    Received:"+elm)
             try:
                 datacnt += sys.getsizeof(info)
             except:
