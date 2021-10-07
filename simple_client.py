@@ -141,6 +141,7 @@ def server_func():
                 datacnt += sys.getsizeof(info)
             except:
                 return recv_data
+        return recv_data
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('', self_port))
