@@ -122,6 +122,7 @@ def server_func():
             lines = recv_data.split(b'#')
             recv_data = lines[-1]
             info = lines[:-1]
+            
 ##            info = recv_data.decode('utf-8')
 ##Received info are merged, modify here
             
@@ -131,16 +132,12 @@ def server_func():
                     continue
                 
                 if len(elm.split('|')) < 5:
-                    print("    Total Received:"+info)
                     print("    Received:"+elm)
                     for i in range(50):
                         print(" ********************************")
 
                 on_receiving(elm)
-            try:
-                datacnt += sys.getsizeof(info)
-            except:
-                return recv_data
+                datacnt += sys.getsizeof(elm)
         return recv_data
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
