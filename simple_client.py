@@ -24,7 +24,6 @@ def client_func():
         for i in range(send_msg_len):
             del to_send_msg[0]
         for elm in tmp_send_list:
-##            print("Sending:"+elm[1])
             if elm[0] == "Multicast":
                 multicast(elm[1])
             else:
@@ -64,6 +63,7 @@ def client_func():
     while True:
         send_msg()
         time.sleep(0.01)
+
     return
     
 def establish_connection(node_id):
@@ -74,7 +74,7 @@ def establish_connection(node_id):
     port = port_list[node_id]
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(0.25)
+    s.settimeout(0.5)
     socket_list[node_id] = s
     while True:
         try:
@@ -82,7 +82,7 @@ def establish_connection(node_id):
             connected[node_id] = True
             break
         except:
-            time.sleep(0.25)
+            time.sleep(0.5)
             continue
     return
     
@@ -166,7 +166,6 @@ def process_to_send(msg):
     parse_str_map[dict_key] = [proposed_priority, "undelivered"]
     pending_msg.append([proposed_priority, "undelivered", req_pack_str])
     organize_pending()
-##    print("pos1,"+req_pack_str)
     to_send_msg.append(("Multicast", req_pack_str))
     
 def on_receiving(msg):
@@ -196,7 +195,6 @@ def on_receiving(msg):
         sequence_num += 1
         send_back_str = pack_send_back_msg(parse_str, proposed_priority)
         send_back_str = msg_set_sender(send_back_str, self_node_name)
-##        print("pos2,"+send_back_str)
         to_send_msg.append((sender_id, send_back_str))
     elif msg_type == 1:
         if dict_key not in msg_replied:
@@ -224,7 +222,6 @@ def on_receiving(msg):
             pending_msg[i_flag][1] = "delivered"
             organize_pack_str = pack_send_back_msg(parse_str, new_priority, 2)
             organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
-##            print("pos3"+organize_pack_str)
             to_send_msg.append(("Multicast", organize_pack_str))
             time_diff.append(time.time()-float(dict_key.split('|')[0]))
             organize_pending()
@@ -300,7 +297,6 @@ def organize_pending():
                     pending_msg[i_flag][1] = "delivered"
                     organize_pack_str = pack_send_back_msg(parse_str, priority, 2)
                     organize_pack_str = msg_set_sender(organize_pack_str, self_node_name)
-##                    print("pos4"+organize_pack_str)
                     to_send_msg.append(("Multicast", organize_pack_str))
                 return
             return
@@ -333,11 +329,14 @@ def give_priority(msg):
 
 def give_type(msg):
     contents = msg.split('|')
-    if len(contents) < 1 or contents[0] not in ['0','1','2']:
+    if len(contents) < 1:
+        print("Err in give_type function:"+msg)
         return -1
     msg_type = int(contents[0])
-    return msg_type
-
+    if msg_type in [0,1,2]:
+        return msg_type
+    print("Err in give_type function:"+msg)
+    return -1
 
 def parse_msg(msg):
     contents = msg.split('|')
@@ -480,7 +479,7 @@ try:
     while True:
         if False not in connected:
             break
-##    print("Fully Connected...Start in 5 seconds...")
+    print("Fully Connected...Start in 5 seconds...")
     time.sleep(5)
     if False not in connected:
         os_t = threading.Thread(target=os_func, args=())
