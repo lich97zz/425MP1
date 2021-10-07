@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 import numpy
 
 
-##def print_info():
-##    print("parse_str_map:",parse_str_map,'\n')
-##    print("msg_replied:",msg_replied,'\n')
-##    print("pending_msg:",pending_msg,'\n')
-##    print("to_send_msg:",to_send_msg,'\n')
-##    print("delivered_msg:",delivered_msg,'\n')
+def print_info():
+    print("parse_str_map:",parse_str_map,'\n')
+    print("msg_replied:",msg_replied,'\n')
+    print("pending_msg:",pending_msg,'\n')
+    print("to_send_msg:",to_send_msg,'\n')
+    print("delivered_msg:",delivered_msg,'\n')
     
 def client_func():
     def send_msg():
@@ -24,13 +24,7 @@ def client_func():
         for i in range(send_msg_len):
             del to_send_msg[0]
         for elm in tmp_send_list:
-            #flaw here(the received function can't split correctly)
-            #, add a end character # for each msg
-##            print("    Sending:"+elm[1])
-            if len(elm[1].split('|')) < 5:
-                print("    Sending:"+elm[1])
-                for i in range(50):
-                    print(" ********************************")
+
             if elm[0] == "Multicast":
                 multicast(elm[1]+"#")
             else:
@@ -93,73 +87,6 @@ def establish_connection(node_id):
             continue
     return
 
-##def server_func():
-##    global self_port
-##    sel = selectors.DefaultSelector()
-##    def accept_wrapper(sock):
-##        conn, addr = sock.accept()
-##        conn.setblocking(False)
-##        data = types.SimpleNamespace(addr=addr, inb=b"", outb=b"")
-##        events = selectors.EVENT_READ | selectors.EVENT_WRITE
-##        sel.register(conn, events, data=data)
-##
-##    def service_connection(key, mask):
-##        sock = key.fileobj
-##        data = key.data
-##        if mask & selectors.EVENT_READ:
-##            recv_data = sock.recv(1024)  # Should be ready to read
-##            if recv_data:
-##                data.outb += recv_data
-##                if not recv_data:
-##                    sel.unregister(s)
-##                    s.close()
-##
-##                lines = data.outb.split(b'#')
-##                received_msg = lines[-1]
-##                info = lines[:-1]
-##            
-####            info = recv_data.decode('utf-8')
-####Received info are merged, modify here
-##            
-##            for elm in info:
-##                elm = elm.decode('utf-8')
-##                if len(elm) < 3:
-##                    continue
-##                
-##                if len(elm.split('|')) < 5:
-##                    print("    Received:"+elm)
-##                    for i in range(50):
-##                        print(" ********************************")
-##
-##                on_receiving(elm)
-##                datacnt += sys.getsizeof(elm)
-##            else:
-##                sel.unregister(sock)
-##                sock.close()
-##        if mask & selectors.EVENT_WRITE:
-##            if data.outb:
-##                data.outb = data.outb[sent:]
-##
-##
-##    lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-##    lsock.bind(('', self_port))
-##    lsock.listen()
-##    lsock.setblocking(False)
-##    sel.register(lsock, selectors.EVENT_READ, data=None)
-##
-##    try:
-##        while True:
-##            events = sel.select(timeout=None)
-##            for key, mask in events:
-##                if key.data is None:
-##                    accept_wrapper(key.fileobj)
-##                else:
-##                    service_connection(key, mask)
-##    except KeyboardInterrupt:
-##        print("caught keyboard interrupt, exiting")
-##    finally:
-##        sel.close()
-
 
 def server_func():
     #a many to one receive function
@@ -188,7 +115,6 @@ def server_func():
                 sel.unregister(s)
                 s.close()
             else:
-##            with receive_mtx:
                 data.outb += recv_data
 
                 lines = data.outb.split(b'#')
@@ -244,7 +170,6 @@ def init(file_name):
             ip_list.append(str(node_ip))
             port_list.append(int(node_port))
             connected.append(False)
-
             socket_list.append("")
 
 
@@ -455,7 +380,6 @@ def init(file_name):
             ip_list.append(str(node_ip))
             port_list.append(int(node_port))
             connected.append(False)
-
             socket_list.append("")
 
 
@@ -565,7 +489,6 @@ cur_time = 0
 
 try:
     
-    
     receive_t = threading.Thread(target=server_func, args=())
     receive_t.start()
 
@@ -593,7 +516,7 @@ try:
             #Plot
             time_lag = 0
             if len(time_diff):
-                time_lag = round(sum(time_diff)/len(time_diff*5),2)
+                time_lag = round(sum(time_diff)/len(time_diff),2)
                 time_diff = []
             time_lag_list.append(time_lag)
             datacnt_list.append(datacnt)
@@ -616,10 +539,6 @@ try:
     time.sleep(500)
 except KeyboardInterrupt:
     print("")
-##    print(delivered_msg)
-##    print(pending_msg)
-##    print("\n")
-##    print(msg_replied)
 finally:
     for s in socket_list:
         end_of_program = True
